@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+    <kcfgfile name=""/>
+
+    <group name="Geometry">
+        <entry name="startOffset" type="Int">
+            <default>-6</default>
+        </entry>
+        <entry name="spacerWidth" type="Int">
+            <default>2</default>
+        </entry>
+        <entry name="capacityHeight" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="capacityMargin" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="capacityTopAlign" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="rateHeight" type="Int">
+            <default>3</default>
+        </entry>
+        <entry name="rateMargin" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="rateRescale" type="Double">
+            <default>1.0</default>
+        </entry>
+        <entry name="rateTopAlign" type="Bool">
+            <default>false</default>
+        </entry>
+    </group>
+    <group name="Color">
+        <entry name="capacityColor" type="Color">
+            <default>#ff0000</default>
+        </entry>
+        <entry name="capacityOpacity" type="Int">
+            <default>32</default>
+        </entry>
+        <entry name="rateColor" type="Color">
+            <default>#00ff00</default>
+        </entry>
+        <entry name="rateOpacity" type="Int">
+            <default>255</default>
+        </entry>
+    </group>
+    <group name="Animation">
+        <entry name="plugInAnimation" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="plugOutAnimation" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="chargingAnimation" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="chargingAnimationSpeed" type="Double">
+            <default>1.5</default>
+        </entry>
+        <entry name="chargingAnimationDelay" type="Double">
+            <default>10.0</default>
+        </entry>
+    </group>
+    <group name="Misc">
+        <entry name="valueOffset" type="Int">
+            <default>0.0</default>
+        </entry>
+        <entry name="valueRateOffset" type="Int">
+            <default>0.0</default>
+        </entry>
+        <entry name="updateInterval" type="Double">
+            <default>10.0</default>
+        </entry>
+    </group>
+    
+</kcfg>

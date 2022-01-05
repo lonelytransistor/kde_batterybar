@@ -1,0 +1,17 @@
+[Desktop Entry]
+Name=Battery bar
+Comment=Plasmoid for displaying battery status as a long horizontal bar.
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=lonelytransistor
+X-KDE-PluginInfo-Email=
+X-KDE-PluginInfo-License=GPL2
+X-KDE-PluginInfo-Name=org.kde.batteryBar
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=https://github.com/lonelytransistor/kde_batterybar
+X-KDE-ServiceTypes=Plasma/Applet
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
+X-Plasma-RemoteLocation=
+X-KDE-PluginInfo-Category=System Information
+Icon=battery
