@@ -36,13 +36,13 @@
     </group>
     <group name="Color">
         <entry name="capacityColor" type="Color">
-            <default>#ff0000</default>
+            <default>#00ff00</default>
         </entry>
         <entry name="capacityOpacity" type="Int">
             <default>32</default>
         </entry>
         <entry name="rateColor" type="Color">
-            <default>#00ff00</default>
+            <default>#ff0000</default>
         </entry>
         <entry name="rateOpacity" type="Int">
             <default>255</default>
