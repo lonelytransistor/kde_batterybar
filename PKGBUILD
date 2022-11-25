@@ -1,11 +1,11 @@
 pkgname=kdeplasma-applets-batterybar
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="A KDE plasmoid showing you the current state of the battery in a nice graphical way."
 url="https://github.com/lonelytransistor/kde_batterybar"
 arch=("any")
 license=("GPL2")
-depends=("plasma-workspace", "qt5-tools")
+depends=("plasma-workspace" "qt5-tools")
 makedepends=()
 conflicts=()
 source=("${url}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
