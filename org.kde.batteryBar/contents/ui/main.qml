@@ -469,17 +469,7 @@ Item {
     PlasmaCore.DataSource {
         id: batteryData
         engine: "executable"
-        connectedSources: {
-            var sources = []
-            var keys = Object.keys(batteryCMDs)
-            for (const key in keys) {
-                if (batteryCMDs.hasOwnProperty(keys[key])) {
-                    //connectSource(keys[key])
-                    sources.push(keys[key])
-                }
-            }
-            return sources
-        }
+        connectedSources: []
         
         property double p_now: 0
         property double p_rate: 0
@@ -491,12 +481,27 @@ Item {
         property bool b_charging: false
         property bool b_chaarging: true
         
-        property var batteryCMDs: {
-                'qdbus --system org.freedesktop.UPower /org/freedesktop/UPower/devices/battery_BAT0 org.freedesktop.UPower.Device.Percentage': 'p_now',
-                'qdbus --system org.freedesktop.UPower /org/freedesktop/UPower/devices/battery_BAT0 org.freedesktop.UPower.Device.Energy': 'e_now',
-                'qdbus --system org.freedesktop.UPower /org/freedesktop/UPower/devices/battery_BAT0 org.freedesktop.UPower.Device.EnergyRate': 'e_rate',
-                'qdbus --system org.freedesktop.UPower /org/freedesktop/UPower/devices/battery_BAT0 org.freedesktop.UPower.Device.EnergyFull': 'e_full',
-                'qdbus --system org.freedesktop.UPower /org/freedesktop/UPower/devices/battery_BAT0 org.freedesktop.UPower.Device.State': 'b_state'}
+        property var batteryCMDs: {}
+        property var devicePath: plasmoid.configuration.devicePath
+        onDevicePathChanged: {
+            var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
+            var dbusSuffix = ' org.freedesktop.UPower.Device.'
+
+            batteryCMDs = {}
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
+
+            connectedSources = []
+            var keys = Object.keys(batteryCMDs)
+            for (const key in keys) {
+                if (batteryCMDs.hasOwnProperty(keys[key])) {
+                    connectedSources.push(keys[key])
+                }
+            }
+        }
                 
         onNewData: {
             if (data['exit code'] == 0) {

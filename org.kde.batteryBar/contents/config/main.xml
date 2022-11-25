@@ -75,6 +75,9 @@
         <entry name="updateInterval" type="Double">
             <default>10.0</default>
         </entry>
+        <entry name="devicePath" type="String">
+            <default></default>
+        </entry>
     </group>
     
 </kcfg>
