@@ -50,7 +50,7 @@ class Compiler:
         data += "\n"
         for path in files:
             data += '    install -t "${pkgdir}"/usr/share/plasma/plasmoids/'
-            data += '{path_dir}/ {path}\n'.format(path_dir=os.path.basename(path), path=path)
+            data += '{path_dir}/ {path}\n'.format(path_dir=os.path.dirname(path), path=path)
         data += "}\n"
         return data
     def replaceAll(self, data):
