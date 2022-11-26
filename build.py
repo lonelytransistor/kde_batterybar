@@ -27,7 +27,8 @@ class Compiler:
             "metadata.desktop": self.config["output"] + "/" + self.config["name"] + "/metadata.desktop",
             "PKGBUILD":         self.config["output"] + "/PKGBUILD",
             ".tar.gz":          self.config["output"] + "/" + self.config["name"] + ".tar.gz",
-            ".tar.gz":          self.config["output"] + "/" + self.config["name"] + ".tar.xz",
+            ".tar.xz":          self.config["output"] + "/" + self.config["name"] + ".tar.xz",
+            ".zip":             self.config["output"] + "/" + self.config["name"] + ".zip",
             ".plasmoid":        self.config["output"] + "/" + self.config["name"] + ".plasmoid",
             "outputDir":        self.config["output"] + "/",
             }
@@ -74,7 +75,8 @@ class Compiler:
         with open(self.pathsData["metadata.desktop"], "w") as f:
             f.write(data)
         os.system("(cd {} && tar czvf ../{} {})".format(self.pathsData["outputDir"], self.pathsData[".tar.gz"], self.config["name"]))
-        os.system("cp {} {}".format(self.pathsData[".tar.gz"], self.pathsData[".plasmoid"]))
+        os.system("(cd {} && zip ../{} {})".format(self.pathsData["outputDir"], self.pathsData[".zip"], self.config["name"]))
+        os.system("cp {} {}".format(self.pathsData[".zip"], self.pathsData[".plasmoid"]))
         # CHKSUM
         sha1 = hashlib.sha1()
         with open(self.pathsData[".plasmoid"], 'rb') as f:
