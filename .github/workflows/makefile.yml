@@ -31,4 +31,5 @@ jobs:
           title: "Build ${{ steps.get_version.outputs.VERSION }}"
           files: |
             build/org.kde.batteryBar.plasmoid
+            build/org.kde.batteryBar.tar.gz
             build/PKGBUILD
