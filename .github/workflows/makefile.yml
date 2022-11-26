@@ -9,8 +9,7 @@ jobs:
   build:
     name: Create a release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@master
