@@ -82,7 +82,7 @@ class Compiler:
                 if not data:
                     break
                 sha1.update(data)
-        self.config.update({"#CHKSUM#": sha1.hexdigest()})
+        self.replaceData.update({"#CHKSUM#": sha1.hexdigest()})
         # PKGBUILD
         with open(self.pathsData["PKGBUILD"], "r") as f:
             data = self.replaceAll(f.read())
