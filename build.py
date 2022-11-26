@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, os, hashlib
+import argparse, os, hashlib, re
 
 class Compiler:
     BUF_SIZE = 65536
@@ -7,13 +7,13 @@ class Compiler:
         self.parser = argparse.ArgumentParser(
                 prog = "PlasmoidCompiler",
                 description = "Compiles plasmoid data into a .tar.gz, .plasmoid and an ArchLinux package from the provided source code.")
-        self.parser.add_argument("--version", type=str, required=True, help="Version name.")
+        self.parser.add_argument("--version", type=str, required=True, help="Version name from github.")
         self.parser.add_argument("--name", type=str, required=True,    help="Main folder and plasmoid name.")
         self.parser.add_argument("--pkg", type=str, required=True,     help="ArchLinux package name.")
         self.parser.add_argument("--url", type=str, required=True,     help="Full github url.")
         self.parser.add_argument("output", type=str,                   help="Output folder.")
         self.config = vars(self.parser.parse_args())
-        self.config.update({"version": self.config["version"].lstrip("v")})
+        self.config.update({"version": re.search(r'v([0-9.]+)', "refs/tags/v1.0").group(1)})
 
         self.replaceData = {
             "#VERSION#": self.config["version"],
