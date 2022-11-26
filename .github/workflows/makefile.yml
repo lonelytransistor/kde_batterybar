@@ -9,6 +9,8 @@ jobs:
   build:
     name: Create a release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -18,15 +20,12 @@ jobs:
         run: |
           make
       - name: Create Release
-        id: create_release
-        uses: marvinpinto/action-automatic-releases@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: ${{ github.ref }}
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ github.ref }}"
           prerelease: false
-          title: "Release ${{ github.ref }}"
+          title: "Development Build"
           files: |
             build/kdeplasma-applets-batterybar.plasmoid
             build/PKGBUILD
