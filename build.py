@@ -26,8 +26,8 @@ class Compiler:
             "metadata.json":    self.config["output"] + "/" + self.config["name"] + "/metadata.json",
             "metadata.desktop": self.config["output"] + "/" + self.config["name"] + "/metadata.desktop",
             "PKGBUILD":         self.config["output"] + "/PKGBUILD",
-            ".tar.gz":          self.config["output"] + "/" + self.config["pkg"] + ".tar.gz",
-            ".plasmoid":        self.config["output"] + "/" + self.config["pkg"] + ".plasmoid",
+            ".tar.gz":          self.config["output"] + "/" + self.config["name"] + ".tar.gz",
+            ".plasmoid":        self.config["output"] + "/" + self.config["name"] + ".plasmoid",
             "outputDir":        self.config["output"] + "/",
             }
 
