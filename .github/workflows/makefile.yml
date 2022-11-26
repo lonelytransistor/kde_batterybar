@@ -1,0 +1,38 @@
+name: build-package
+
+on: 
+  push:
+    tags: 
+      - "*"
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Get version name
+        id: version_name
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Build package
+        env:
+          VERSION_NAME: ${{ steps.version_name.outputs.SOURCE_TAG }}
+        run: |
+          make
+      - name: Create Github release
+        uses: marvinpinto/action-automatic-releases@latest
+        env:
+          VERSION_NAME: ${{ steps.version_name.outputs.SOURCE_TAG }}
+        with: 
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "v${{ env.VERSION_NAME }}"
+          prerelease: false
+          title: "Release ${{ env.VERSION_NAME }}"
+          files: |
+            build/kdeplasma-applets-batterybar.plasmoid
+            build/PKGBUILD
