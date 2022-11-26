@@ -48,10 +48,11 @@ Kirigami.FormLayout {
         id: deviceNameComboBox
 
         Kirigami.FormData.label: i18n("Device name:")
-        property var devicePaths: []
+        property var devicePaths: [""]
         onDevicePathsChanged: {
             model.clear()
-            for (var ix=0; ix<devicePaths.length; ix++) {
+            model.append({"label": "Dummy source", "path": "", "name": "", "ix": 0})
+            for (var ix=1; ix<devicePaths.length; ix++) {
                 var name = devicePaths[ix].match(/(\/\w+)$/g)[0]
                 var item = {"label": name, "path": devicePaths[ix], "name": name, "ix": ix}
                 model.append(item)
@@ -71,7 +72,14 @@ Kirigami.FormLayout {
                 }
             }
         }
-        model: ListModel {}
+        model: ListModel {
+            ListElement {
+                name: "Dummy source"
+                path: ""
+                name: ""
+                ix: 0
+            }
+        }
         textRole: "label"
 
         currentIndex: {

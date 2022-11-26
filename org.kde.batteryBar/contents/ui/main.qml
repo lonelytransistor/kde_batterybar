@@ -479,27 +479,31 @@ Item {
         property int b_state: 0
         property bool b_discharging: false
         property bool b_charging: false
-        property bool b_chaarging: true
         
         property var batteryCMDs: {}
         property var devicePath: plasmoid.configuration.devicePath
         onDevicePathChanged: {
-            var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
-            var dbusSuffix = ' org.freedesktop.UPower.Device.'
+            if (devicePath) {
+                var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
+                var dbusSuffix = ' org.freedesktop.UPower.Device.'
 
-            batteryCMDs = {}
-            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
-            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
-            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
-            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
-            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
+                batteryCMDs = {}
+                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
+                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
+                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
+                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
+                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
 
-            connectedSources = []
-            var keys = Object.keys(batteryCMDs)
-            for (const key in keys) {
-                if (batteryCMDs.hasOwnProperty(keys[key])) {
-                    connectedSources.push(keys[key])
+                connectedSources = []
+                var keys = Object.keys(batteryCMDs)
+                for (const key in keys) {
+                    if (batteryCMDs.hasOwnProperty(keys[key])) {
+                        connectedSources.push(keys[key])
+                    }
                 }
+            } else {
+                p_now = 0.5
+                p_rate = 0.25
             }
         }
                 
