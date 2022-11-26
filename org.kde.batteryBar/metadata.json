@@ -23,7 +23,7 @@
 		],
 		"FormFactors": [
 			"desktop"
-		],
+		]
 	},
 	"X-Plasma-API": "declarativeappletscript",
 	"X-Plasma-MainScript": "ui/main.qml",
