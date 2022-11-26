@@ -13,7 +13,7 @@ class Compiler:
         self.parser.add_argument("--url", type=str, required=True,     help="Full github url.")
         self.parser.add_argument("output", type=str,                   help="Output folder.")
         self.config = vars(self.parser.parse_args())
-        self.config.update({"version": re.search(r'v([0-9.]+)', "refs/tags/v1.0").group(1)})
+        self.config.update({"version": re.search(r'v([0-9.]+)', self.config["version"]).group(1)})
 
         self.replaceData = {
             "#VERSION#": self.config["version"],
