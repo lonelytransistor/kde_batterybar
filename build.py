@@ -79,7 +79,7 @@ class Compiler:
         os.system("cp {} {}".format(self.pathsData[".zip"], self.pathsData[".plasmoid"]))
         # CHKSUM
         sha1 = hashlib.sha1()
-        with open(self.pathsData[".plasmoid"], 'rb') as f:
+        with open(self.pathsData[".tar.gz"], 'rb') as f:
             while True:
                 data = f.read(self.BUF_SIZE)
                 if not data:
