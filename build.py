@@ -11,6 +11,7 @@ class Compiler:
         self.parser.add_argument("--name", type=str, required=True,    help="Main folder and plasmoid name.")
         self.parser.add_argument("--pkg", type=str, required=True,     help="ArchLinux package name.")
         self.parser.add_argument("--url", type=str, required=True,     help="Full github url.")
+        self.parser.add_argument("--makepkg", type=bool, required=True,help="Create an ArchLinux package.")
         self.parser.add_argument("output", type=str,                   help="Output folder.")
         self.config = vars(self.parser.parse_args())
         self.config.update({"version": re.search(r'v([0-9.]+)', "refs/tags/v1.0").group(1)})
@@ -27,6 +28,7 @@ class Compiler:
             "metadata.desktop": self.config["output"] + "/" + self.config["name"] + "/metadata.desktop",
             "PKGBUILD":         self.config["output"] + "/PKGBUILD",
             ".tar.gz":          self.config["output"] + "/" + self.config["name"] + ".tar.gz",
+            ".tar.gz":          self.config["output"] + "/" + self.config["name"] + ".tar.xz",
             ".plasmoid":        self.config["output"] + "/" + self.config["name"] + ".plasmoid",
             "outputDir":        self.config["output"] + "/",
             }
@@ -88,7 +90,12 @@ class Compiler:
             data = self.replaceAll(f.read())
         with open(self.pathsData["PKGBUILD"], "w") as f:
             f.write(data)
-        print(data)
+        if (config["makepkg"])
+        # PKGBUILD
+        with open(self.pathsData["PKGBUILD"], "r") as f:
+            data = self.replaceAll(f.read())
+        with open(self.pathsData["PKGBUILD"], "w") as f:
+            f.write(data)
 
 app = Compiler()
 app.build()

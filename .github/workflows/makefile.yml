@@ -27,5 +27,5 @@ jobs:
           prerelease: false
           title: "Build ${{ github.ref }}"
           files: |
-            build/kdeplasma-applets-batterybar.plasmoid
+            build/org.kde.batteryBar.plasmoid
             build/PKGBUILD
