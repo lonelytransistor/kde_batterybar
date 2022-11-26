@@ -76,7 +76,7 @@
             <default>10.0</default>
         </entry>
         <entry name="devicePath" type="String">
-            <default></default>
+            <default>null</default>
         </entry>
     </group>
     

@@ -12,7 +12,7 @@ Kirigami.FormLayout {
     property alias cfg_updateInterval: updateIntervalSpinBox.value
     property alias cfg_valueOffset: valueOffsetSpinBox.value
     property alias cfg_valueRateOffset: valueRateOffsetSpinBox.value
-    property var cfg_devicePath
+    property alias cfg_devicePath: deviceNameComboBox.devicePath
     
     QQC1.SpinBox {
         id: updateIntervalSpinBox
@@ -47,46 +47,49 @@ Kirigami.FormLayout {
     QQC2.ComboBox {
         id: deviceNameComboBox
 
+        property string devicePath
         Kirigami.FormData.label: i18n("Device name:")
-        property var devicePaths: [""]
-        onDevicePathsChanged: {
-            model.clear()
-            model.append({"label": "Dummy source", "path": "", "name": "", "ix": 0})
-            for (var ix=1; ix<devicePaths.length; ix++) {
-                var name = devicePaths[ix].match(/(\/\w+)$/g)[0]
-                var item = {"label": name, "path": devicePaths[ix], "name": name, "ix": ix}
-                model.append(item)
-            }
-        }
 
         PlasmaCore.DataSource {
             id: deviceNameDataSource
             engine: "executable"
             connectedSources: ["qdbus --literal --system org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.EnumerateDevices"]
+            property var devicePaths: []
 
             onNewData: {
                 if (data['exit code'] == 0) {
-                    var paths = data.stdout.match(/(\/\w+)+/g)
-                    if (paths)
-                        deviceNameComboBox.devicePaths = paths
+                    var _paths = data.stdout.match(/(\/\w+)+/g)
+                    var paths = ["/Dummy"]
+                    for (var ix=0; ix<_paths.length; ix++) {
+                        paths.push(_paths[ix])
+                    }
+                    devicePaths = paths
+
+                    deviceNameComboBox.model.clear()
+                    for (var ix=0; ix<devicePaths.length; ix++) {
+                        var name = devicePaths[ix].replace(/.*?\/(\w+)$/gm, "$1")
+                        deviceNameComboBox.model.append({
+                            "label": name,
+                            "path": devicePaths[ix],
+                            "name": name,
+                            "ix": ix})
+                    }
+
+                    var ix = devicePaths.indexOf(deviceNameComboBox.devicePath)
+                    ix = ix>0 ? ix : 0
+                    deviceNameComboBox.currentIndex = ix
                 }
             }
         }
         model: ListModel {
             ListElement {
-                name: "Dummy source"
-                path: ""
-                name: ""
+                label: "Dummy"
+                name: "Dummy"
+                path: "/Dummy"
                 ix: 0
             }
         }
         textRole: "label"
-
-        currentIndex: {
-            var ix = devicePaths.indexOf(parent.cfg_devicePath)
-            ix = ix ? ix : 0
-            return ix
-        }
-        onActivated: miscSettings.cfg_devicePath = devicePaths[currentIndex]
+        onActivated: devicePath = deviceNameDataSource.devicePaths[currentIndex]
     }
 }

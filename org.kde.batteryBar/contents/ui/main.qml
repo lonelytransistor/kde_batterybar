@@ -471,40 +471,39 @@ Item {
         engine: "executable"
         connectedSources: []
         
-        property double p_now: 0
-        property double p_rate: 0
+        property double p_now: 0.5
+        property double p_rate: 0.25
         property double e_now: 0
         property double e_rate: 0
         property double e_full: 0
         property int b_state: 0
         property bool b_discharging: false
         property bool b_charging: false
+
+        property int errorCount: 0
+        readonly property int errorMax: 10
         
         property var batteryCMDs: {}
-        property var devicePath: plasmoid.configuration.devicePath
+        property string devicePath: plasmoid.configuration.devicePath
         onDevicePathChanged: {
-            if (devicePath) {
-                var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
-                var dbusSuffix = ' org.freedesktop.UPower.Device.'
+            var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
+            var dbusSuffix = ' org.freedesktop.UPower.Device.'
 
-                batteryCMDs = {}
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
+            batteryCMDs = {}
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
+            batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
 
-                connectedSources = []
-                var keys = Object.keys(batteryCMDs)
-                for (const key in keys) {
-                    if (batteryCMDs.hasOwnProperty(keys[key])) {
-                        connectedSources.push(keys[key])
-                    }
+            connectedSources = []
+            var keys = Object.keys(batteryCMDs)
+            for (const key in keys) {
+                if (batteryCMDs.hasOwnProperty(keys[key])) {
+                    connectedSources.push(keys[key])
                 }
-            } else {
-                p_now = 0.5
-                p_rate = 0.25
             }
+            errorCount = 0
         }
                 
         onNewData: {
@@ -551,6 +550,17 @@ Item {
                     break
                     default:
                     break
+                }
+                errorCount = 0
+            } else {
+                errorCount += 1
+                console.log(devicePath + ":" + data.stderr)
+                if (errorCount >= errorMax) {
+                    if (!p_now)
+                        p_now = 0.5
+                    if (!p_rate)
+                        p_rate = 0.25
+                    errorCount = errorMax
                 }
             }
         }
