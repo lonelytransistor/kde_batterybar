@@ -16,7 +16,6 @@ jobs:
         env:
           VERSION_TAG: ${{ github.ref }}
         run: |
-          env VERSION=$(echo ${VERSION_TAG} | cut -c2-)
           make
       - name: Create Release
         id: create_release

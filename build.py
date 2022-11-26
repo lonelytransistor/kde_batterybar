@@ -7,12 +7,13 @@ class Compiler:
         self.parser = argparse.ArgumentParser(
                 prog = "PlasmoidCompiler",
                 description = "Compiles plasmoid data into a .tar.gz, .plasmoid and an ArchLinux package from the provided source code.")
-        self.parser.add_argument("--version", type=float, required=True, help="Version name.")
-        self.parser.add_argument("--name", type=str, required=True,      help="Main folder and plasmoid name.")
-        self.parser.add_argument("--pkg", type=str, required=True,       help="ArchLinux package name.")
-        self.parser.add_argument("--url", type=str, required=True,       help="Full github url.")
-        self.parser.add_argument("output", type=str,                     help="Output folder.")
+        self.parser.add_argument("--version", type=str, required=True, help="Version name.")
+        self.parser.add_argument("--name", type=str, required=True,    help="Main folder and plasmoid name.")
+        self.parser.add_argument("--pkg", type=str, required=True,     help="ArchLinux package name.")
+        self.parser.add_argument("--url", type=str, required=True,     help="Full github url.")
+        self.parser.add_argument("output", type=str,                   help="Output folder.")
         self.config = vars(self.parser.parse_args())
+        self.config.update({"version": self.config["version"].lstrip("v")})
 
         self.replaceData = {
             "#VERSION#": self.config["version"],
@@ -87,6 +88,7 @@ class Compiler:
             data = self.replaceAll(f.read())
         with open(self.pathsData["PKGBUILD"], "w") as f:
             f.write(data)
+        print(data)
 
 app = Compiler()
 app.build()
