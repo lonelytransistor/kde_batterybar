@@ -11,7 +11,6 @@ class Compiler:
         self.parser.add_argument("--name", type=str, required=True,    help="Main folder and plasmoid name.")
         self.parser.add_argument("--pkg", type=str, required=True,     help="ArchLinux package name.")
         self.parser.add_argument("--url", type=str, required=True,     help="Full github url.")
-        self.parser.add_argument("--makepkg", type=bool, required=True,help="Create an ArchLinux package.")
         self.parser.add_argument("output", type=str,                   help="Output folder.")
         self.config = vars(self.parser.parse_args())
         self.config.update({"version": re.search(r'v([0-9.]+)', "refs/tags/v1.0").group(1)})
@@ -85,12 +84,6 @@ class Compiler:
                     break
                 sha1.update(data)
         self.replaceData.update({"#CHKSUM#": sha1.hexdigest()})
-        # PKGBUILD
-        with open(self.pathsData["PKGBUILD"], "r") as f:
-            data = self.replaceAll(f.read())
-        with open(self.pathsData["PKGBUILD"], "w") as f:
-            f.write(data)
-        if (config["makepkg"])
         # PKGBUILD
         with open(self.pathsData["PKGBUILD"], "r") as f:
             data = self.replaceAll(f.read())
