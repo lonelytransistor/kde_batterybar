@@ -196,18 +196,28 @@ Item {
             }
         }
     }
-    Repeater {
-        model: 10
-        Rectangle {
-            anchors.top: chargeRate_bar.top
-            anchors.bottom: chargeRate_bar.bottom
+    Rectangle {
+        id: chargeRage_segments
+        anchors.top: chargeRate_bar.top
+        anchors.bottom: chargeRate_bar.bottom
+        anchors.left: chargeNow_bar.left
+        anchors.right: chargeNow_bar.right
+        clip: true
+        color: "transparent"
 
-            color: plasmoid.configuration.rateSegmentsColor
-            opacity: plasmoid.configuration.rateSegmentsOpacity/255
+        Repeater {
+            model: 10
+            Rectangle {
+                anchors.top: chargeRage_segments.top
+                anchors.bottom: chargeRage_segments.bottom
 
-            x: chargeRate_bar.length*(2+index) - 2
-            width: 4
-            visible: plasmoid.configuration.showSegments
+                color: plasmoid.configuration.rateSegmentsColor
+                opacity: plasmoid.configuration.rateSegmentsOpacity/255
+
+                x: chargeRate_bar.length*(2+index) - 2
+                width: 4
+                visible: plasmoid.configuration.showSegments
+            }
         }
     }
 
