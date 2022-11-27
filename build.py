@@ -32,6 +32,12 @@ class Compiler:
             ".plasmoid":        self.config["output"] + "/" + self.config["name"] + ".plasmoid",
             "outputDir":        self.config["output"] + "/",
             }
+        self.zipFileList = self.getZipFileList()
+        print(self.zipFileList)
+
+    def getZipFileList(self):
+        files   = [os.path.join(p, n) for p,s,f in os.walk(self.config["name"]) for n in f]
+        return ' '.join(files)
 
     def getInstalls(self):
         subdirs = [os.path.join(p, n) for p,s,f in os.walk(self.config["name"]) for n in s]
@@ -75,7 +81,7 @@ class Compiler:
         with open(self.pathsData["metadata.desktop"], "w") as f:
             f.write(data)
         os.system("(cd {} && tar czvf ../{} {})".format(self.pathsData["outputDir"], self.pathsData[".tar.gz"], self.config["name"]))
-        os.system("(cd {} && zip ../{} {})".format(self.pathsData["outputDir"], self.pathsData[".zip"], self.config["name"]))
+        os.system("(cd {} && zip ../{} {})".format(self.pathsData["outputDir"], self.pathsData[".zip"], self.zipFileList))
         os.system("cp {} {}".format(self.pathsData[".zip"], self.pathsData[".plasmoid"]))
         # CHKSUM
         sha1 = hashlib.sha1()
