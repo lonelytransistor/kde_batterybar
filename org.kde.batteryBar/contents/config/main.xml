@@ -16,7 +16,7 @@
             <default>0</default>
         </entry>
         <entry name="capacityMargin" type="Int">
-            <default>0</default>
+            <default>-4</default>
         </entry>
         <entry name="capacityTopAlign" type="Bool">
             <default>true</default>
@@ -25,13 +25,16 @@
             <default>3</default>
         </entry>
         <entry name="rateMargin" type="Int">
-            <default>0</default>
+            <default>-4</default>
         </entry>
         <entry name="rateRescale" type="Double">
             <default>1.0</default>
         </entry>
         <entry name="rateTopAlign" type="Bool">
             <default>false</default>
+        </entry>
+        <entry name="showSegments" type="Bool">
+            <default>true</default>
         </entry>
     </group>
     <group name="Color">
@@ -46,6 +49,12 @@
         </entry>
         <entry name="rateOpacity" type="Int">
             <default>255</default>
+        </entry>
+        <entry name="rateSegmentsColor" type="Color">
+            <default>#ff0000</default>
+        </entry>
+        <entry name="rateSegmentsOpacity" type="Int">
+            <default>128</default>
         </entry>
     </group>
     <group name="Animation">
@@ -73,7 +82,7 @@
             <default>0.0</default>
         </entry>
         <entry name="updateInterval" type="Double">
-            <default>10.0</default>
+            <default>5.0</default>
         </entry>
         <entry name="devicePath" type="String">
             <default>null</default>
