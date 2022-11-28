@@ -22,20 +22,28 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Item {
     id: root
 
-    anchors.fill: parent
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground | PlasmaCore.Types.ConfigurableBackground
 
+    property int spacerWidth: plasmoid.configuration.spacerWidth
+    readonly property int editModeSize: 32
+
     property bool vertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     property bool planar: (plasmoid.formFactor == PlasmaCore.Types.Planar)
-    property int spacerWidth: plasmoid.configuration.spacerWidth
+
     property var containmentInterface: null
+    property var appletInterface: null
     property bool editMode: pEditMode
+
+    property int maxLength: 1
     readonly property bool pEditMode: containmentInterface ? containmentInterface.editMode : false
-    readonly property int editModeSize: 32
     onParentChanged: {
         if (parent) {
             for (var obj = root, depth = 0; !!obj; obj = obj.parent, depth++) {
+                if (obj.toString().startsWith('AppletInterface')) {
+                    root.appletInterface = obj
+                    console.log("Applet interface has width=" + obj.width + " height=" + obj.height + " offset=" + obj.x + " y=" + obj.y)
+                }
                 if (obj.toString().startsWith('ContainmentInterface')) {
                     if (typeof obj['editMode'] === 'boolean') {
                         root.containmentInterface = obj
@@ -50,28 +58,18 @@ Item {
                     }
                 }
             }
+            updateDimensions()
         }
     }
-    onPEditModeChanged: {
-        editModeDelay.running = true
-    }
-    onEditModeChanged: {
-        let _width = editMode ? editModeSize : root.spacerWidth
-        root.Layout.preferredWidth = _width
-        root.Layout.minimumWidth = _width
-        root.width = _width
-        root.Layout.preferredHeight = _width
-        root.Layout.minimumHeight = _width
-        root.height = _width
-    }
-    onSpacerWidthChanged: {
-        let _width = editMode ? editModeSize : root.spacerWidth
-        root.Layout.preferredWidth = _width
-        root.Layout.minimumWidth = _width
-        root.width = _width
-        root.Layout.preferredHeight = _width
-        root.Layout.minimumHeight = _width
-        root.height = _width
+    onPEditModeChanged: editModeDelay.running = true
+    onEditModeChanged: updateDimensions()
+    onSpacerWidthChanged: updateDimensions()
+    Timer { // FIXME: find a better way for this.
+        id: updateDimensionsOccasionally
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: updateDimensions()
     }
     Timer {
         id: editModeDelay
@@ -84,5 +82,17 @@ Item {
         anchors.fill: parent
         source: "file:///usr/share/icons/breeze/status/32/battery-full-charging.svg"
         visible: root.editMode
+    }
+    function updateDimensions() {
+        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
+        root.maxLength = root.containmentInterface.width - gpoint.x
+
+        let _width = editMode ? editModeSize : root.spacerWidth
+        root.Layout.preferredWidth = _width
+        root.Layout.minimumWidth = _width
+        root.width = _width
+        root.Layout.preferredHeight = _width
+        root.Layout.minimumHeight = _width
+        root.height = _width
     }
 }

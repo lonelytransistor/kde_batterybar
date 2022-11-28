@@ -42,7 +42,13 @@
             <default>#00ff00</default>
         </entry>
         <entry name="capacityOpacity" type="Int">
-            <default>32</default>
+            <default>24</default>
+        </entry>
+        <entry name="capacityChargingColor" type="Color">
+            <default>#b0ff30</default>
+        </entry>
+        <entry name="capacityChargingOpacity" type="Int">
+            <default>24</default>
         </entry>
         <entry name="rateColor" type="Color">
             <default>#ff0000</default>

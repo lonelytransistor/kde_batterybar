@@ -26,6 +26,8 @@ Kirigami.FormLayout {
     
     property alias cfg_capacityColor: capacityColorPicker.color
     property alias cfg_capacityOpacity: capacityOpacitySlider.value
+    property alias cfg_capacityChargingColor: capacityChargingColorPicker.color
+    property alias cfg_capacityChargingOpacity: capacityChargingOpacitySlider.value
     property alias cfg_rateColor: rateColorPicker.color
     property alias cfg_rateOpacity: rateOpacitySlider.value
     property alias cfg_rateSegmentsColor: rateSegmentsColorPicker.color
@@ -38,9 +40,9 @@ Kirigami.FormLayout {
     }
     QQC1.SpinBox {
         id: capacityOpacitySpinBox
-        
+
         Kirigami.FormData.label: i18n("Current charge bar opacity:")
-        
+
         decimals: 0
         stepSize: 1
         minimumValue: 0
@@ -60,6 +62,36 @@ Kirigami.FormLayout {
         maximumValue: capacityOpacitySpinBox.maximumValue
         updateValueWhileDragging: true
         onValueChanged: capacityOpacitySpinBox.value = value
+    }
+    KQuickControls.ColorButton {
+        id: capacityChargingColorPicker
+        Kirigami.FormData.label: i18n("Current charge bar color:")
+        enabled: true
+    }
+    QQC1.SpinBox {
+        id: capacityChargingOpacitySpinBox
+
+        Kirigami.FormData.label: i18n("Current charge bar opacity:")
+
+        decimals: 0
+        stepSize: 1
+        minimumValue: 0
+        maximumValue: 255
+        onValueChanged: capacityChargingOpacitySlider.value = value
+    }
+    QQC1.Slider {
+        id: capacityChargingOpacitySlider
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 32
+        anchors.rightMargin: 32
+
+        stepSize: capacityChargingOpacitySpinBox.stepSize
+        minimumValue: capacityChargingOpacitySpinBox.minimumValue
+        maximumValue: capacityChargingOpacitySpinBox.maximumValue
+        updateValueWhileDragging: true
+        onValueChanged: capacityChargingOpacitySpinBox.value = value
     }
     KQuickControls.ColorButton {
         id: rateColorPicker

@@ -24,6 +24,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Rectangle {
     id: root
     property bool vertical: false
+    property int maxLength: 0
 
     anchors.top:    (( plasmoid.configuration.capacityTopAlign || plasmoid.configuration.capacityHeight == 0) && !root.vertical) ? parent.top    : undefined
     anchors.bottom: ((!plasmoid.configuration.capacityTopAlign || plasmoid.configuration.capacityHeight == 0) && !root.vertical) ? parent.bottom : undefined
@@ -39,12 +40,12 @@ Rectangle {
     y:  root.vertical ? plasmoid.configuration.startOffset : undefined
 
     property var thickness: plasmoid.configuration.capacityHeight == 0 ? undefined : plasmoid.configuration.capacityHeight
-    property var length:    (batteryData.p_now + plasmoid.configuration.valueOffset)*(root.vertical ? Screen.height : Screen.width)
+    property var length:    (batteryData.p_now + plasmoid.configuration.valueOffset)*maxLength
     width:  root.vertical ? thickness : length
     height: root.vertical ? length : thickness
-    opacity: plasmoid.configuration.capacityOpacity/255
 
-    color: plasmoid.configuration.capacityColor
+    opacity: (batteryData.b_charging ? plasmoid.configuration.capacityChargingOpacity : plasmoid.configuration.capacityOpacity)/255
+    color: (batteryData.b_charging ? plasmoid.configuration.capacityChargingColor : plasmoid.configuration.capacityColor)
     Behavior on width {
         NumberAnimation {
             duration: 1000

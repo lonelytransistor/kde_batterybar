@@ -24,6 +24,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Rectangle {
     id: root
     property bool vertical: false
+    property int maxLength: 0
 
     anchors.top:    (( plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) && !root.vertical) ? parent.top    : undefined
     anchors.bottom: ((!plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) && !root.vertical) ? parent.bottom : undefined
@@ -39,7 +40,7 @@ Rectangle {
     y:  root.vertical ? plasmoid.configuration.startOffset : undefined
 
     property var thickness: (plasmoid.configuration.rateHeight == 0 ? undefined : plasmoid.configuration.rateHeight)
-    property var length:    (plasmoid.configuration.valueRateOffset + batteryData.p_rate*plasmoid.configuration.rateRescale)*(root.vertical ? Screen.height : Screen.width)
+    property var length:    (plasmoid.configuration.valueRateOffset + batteryData.p_rate*plasmoid.configuration.rateRescale)*maxLength
     width:  root.vertical ? thickness : length
     height: root.vertical ? length : thickness
     opacity: plasmoid.configuration.rateOpacity/255

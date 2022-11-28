@@ -23,15 +23,16 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 
 MainContainer {
     id: root
-    anchors.fill: parent
 
     ChargeBar {
         id: chargeNow_bar
         vertical: root.vertical
+        maxLength: root.maxLength
     }
     RateBar {
         id: chargeRate_bar
         vertical: root.vertical
+        maxLength: root.maxLength
     }
     Rectangle {
         id: chargeRage_segments
@@ -64,6 +65,7 @@ MainContainer {
         vertical: root.vertical
         maxWidth: root.vertical ? Screen.height : Screen.width
         discharging: batteryData.b_discharging
+
         plugOutAnimation: plasmoid.configuration.plugOutAnimation
         plugInAnimation: plasmoid.configuration.plugInAnimation
     }
