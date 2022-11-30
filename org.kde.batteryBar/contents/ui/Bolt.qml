@@ -19,28 +19,24 @@ import QtGraphicalEffects 1.0
 
 Rectangle {
     id: root
+
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    property double opacityCharging: (plugInAnimation ? 1.0 : 0.0)
-    opacity: (discharging ? 0.0 : opacityCharging)
+    visible: Global.boltVisible
+    opacity: Global.batteryIsCharging ? 0.7 : 0.0
     color: "transparent"
 
-    property bool plugInAnimation: false
-    property bool discharging: false
-    property int boltDuration: 0
-    property int maxWidth: 0
-
-    x: (discharging ? -200 : maxWidth+200)
+    x: (Global.batteryIsCharging ? Global.maxLen + 200 : -200)
     Behavior on x {
         NumberAnimation {
-            duration: root.boltDuration
+            duration: Global.maxLen*2
             easing.type: Easing.InQuad
         }
     }
     Rectangle {
-        width: 200
-        height: parent.height*4
         y: -parent.height*1.5
+        width: 200
+        height: parent.height*8
         transform: Rotation { origin.x: parent.width; origin.y: parent.height; angle: 30}
 
         LinearGradient {

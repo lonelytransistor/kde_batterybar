@@ -19,73 +19,86 @@ import QtGraphicalEffects 1.0
 
 Rectangle {
     id: root
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
-    property double opacityCharging: (plugOutAnimation ? 0.75 : 0.0)
-    opacity: (discharging ? opacityCharging : 0.0)
+    anchors.fill: parent
     color: "transparent"
-
-    property bool plugOutAnimation: false
-    property bool discharging: false
-    property var bubbleDuration: [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    property int maxWidth: 0
+    opacity: Global.batteryIsCharging ? 0.0 : 0.75
+    visible: Global.bubblesVisible
+    readonly property var speed: [1.5, 1.8, 0.7, 1.2, 1.4, 0.6, 1.0, 0.8, 1.20].map(function(x) { return x*1.5*Global.maxLen })
 
     Item {
-        x: (root.discharging ? root.maxWidth : -200)
+        x: (Global.batteryIsCharging ? -200 : Global.maxLen+200)
+        y: 0
+        height: parent.height
+        width: parent.width
 
         Behavior on x {
             NumberAnimation {
-                duration: root.bubbleDuration[0]
+                duration: root.speed[0]
+                easing.type: Easing.InOutQuad
+            }
+        }
+        Behavior on y {
+            NumberAnimation {
+                duration: root.speed[0]
                 easing.type: Easing.InOutQuad
             }
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[1]
+            speed: root.speed[1]
 
             x: parent.children[1].width*6
-            y: (root.discharging ? parent.height/2-height/2 : parent.height/2-height/4)
+            y: (root.charging ? parent.height/2-height/2 : parent.height/2-height/4)
             width: parent.height/2
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[2]
+            speed: root.speed[2]
 
             x: parent.children[2].width*2
-            y: (root.discharging ? height : parent.height/2)
+            y: (root.charging ? height : parent.height/2)
             width: parent.height/4
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[3]
+            speed: root.speed[3]
 
-            y: (root.discharging ? parent.height-height : 0)
+            y: (root.charging ? parent.height-height : 0)
             width: parent.height/8
         }
     }
     Item {
-        x: (root.discharging ? root.maxWidth : -200)
+        x: (Global.batteryIsCharging ? -200 : Global.maxLen+200)
+        y: 0
+        height: parent.height
+        width: parent.width
 
         Behavior on x {
             NumberAnimation {
-                duration: root.bubbleDuration[4]
+                duration: root.speed[4]
+                easing.type: Easing.InOutQuad
+            }
+        }
+        Behavior on y {
+            NumberAnimation {
+                duration: root.speed[4]
                 easing.type: Easing.InOutQuad
             }
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[5]
+            speed: root.speed[5]
 
-            y: (root.discharging ? height : height/4)
+            y: (root.charging ? height : height/4)
             width: parent.height/3
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[6]
+            speed: root.speed[6]
 
             x: parent.children[0].width*3
-            y: (root.discharging ? height/2 : height*2)
+            y: (root.charging ? height/2 : height*2)
             width: parent.height/4
         }
         Bubble {
-            bubbleDuration: root.bubbleDuration[7]
+            speed: root.speed[7]
 
-            y: (root.discharging ? height/3 : parent.height-2*height/3)
+            y: (root.charging ? height/3 : parent.height-2*height/3)
             width: parent.height/6
         }
     }

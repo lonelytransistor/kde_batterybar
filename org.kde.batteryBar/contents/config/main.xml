@@ -5,90 +5,114 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name=""/>
 
-    <group name="Geometry">
-        <entry name="startOffset" type="Int">
-            <default>-6</default>
-        </entry>
-        <entry name="spacerWidth" type="Int">
-            <default>5</default>
-        </entry>
-        <entry name="capacityHeight" type="Int">
-            <default>0</default>
-        </entry>
-        <entry name="capacityMargin" type="Int">
-            <default>-4</default>
-        </entry>
-        <entry name="capacityTopAlign" type="Bool">
+    <group name="ChargeBarSettings">
+        <entry name="chargeBarTopAlign" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="rateHeight" type="Int">
-            <default>3</default>
-        </entry>
-        <entry name="rateMargin" type="Int">
-            <default>-4</default>
-        </entry>
-        <entry name="rateRescale" type="Double">
-            <default>1.0</default>
-        </entry>
-        <entry name="rateTopAlign" type="Bool">
+        <entry name="chargeBarFlip" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="showSegments" type="Bool">
-            <default>true</default>
+        <entry name="chargeBarFlipOnCharging" type="Bool">
+            <default>false</default>
         </entry>
-    </group>
-    <group name="Color">
-        <entry name="capacityColor" type="Color">
+        <entry name="chargeBarColor" type="Color">
             <default>#00ff00</default>
         </entry>
-        <entry name="capacityOpacity" type="Int">
-            <default>24</default>
+        <entry name="chargeBarOpacity" type="Int">
+            <default>32</default>
         </entry>
-        <entry name="capacityChargingColor" type="Color">
+        <entry name="chargeBarChargingColor" type="Color">
             <default>#b0ff30</default>
         </entry>
-        <entry name="capacityChargingOpacity" type="Int">
-            <default>24</default>
+        <entry name="chargeBarChargingOpacity" type="Int">
+            <default>32</default>
         </entry>
-        <entry name="rateColor" type="Color">
-            <default>#ff0000</default>
+        <entry name="chargeBarOffset" type="Int">
+            <default>-6</default>
         </entry>
-        <entry name="rateOpacity" type="Int">
-            <default>255</default>
+        <entry name="chargeBarHeight" type="Int">
+            <default>0</default>
         </entry>
-        <entry name="rateSegmentsColor" type="Color">
-            <default>#ff0000</default>
-        </entry>
-        <entry name="rateSegmentsOpacity" type="Int">
-            <default>128</default>
+        <entry name="chargeBarMargin" type="Int">
+            <default>-4</default>
         </entry>
     </group>
-    <group name="Animation">
-        <entry name="plugInAnimation" type="Bool">
+    <group name="RateBarSettings">
+        <entry name="rateBarTopAlign" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="plugOutAnimation" type="Bool">
+        <entry name="rateBarFlip" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="rateBarFlipOnCharging" type="Bool">
+            <default>false</default>
+        </entry>
+        <entry name="rateBarColor" type="Color">
+            <default>#ff0000</default>
+        </entry>
+        <entry name="rateBarOpacity" type="Int">
+            <default>255</default>
+        </entry>
+        <entry name="rateBarChargingColor" type="Color">
+            <default>#00ff00</default>
+        </entry>
+        <entry name="rateBarChargingOpacity" type="Int">
+            <default>255</default>
+        </entry>
+        <entry name="rateBarSegmentsColor" type="Color">
+            <default>#00ff00</default>
+        </entry>
+        <entry name="rateBarSegmentsOpacity" type="Int">
+            <default>64</default>
+        </entry>
+        <entry name="rateBarOffset" type="Int">
+            <default>-6</default>
+        </entry>
+        <entry name="rateBarHeight" type="Int">
+            <default>4</default>
+        </entry>
+        <entry name="rateBarMargin" type="Int">
+            <default>-4</default>
+        </entry>
+        <entry name="rateBarRescale" type="Double">
+            <default>1.0</default>
+        </entry>
+    </group>
+    <group name="AnimationSettings">
+        <entry name="animationsVisible" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="chargingAnimation" type="Bool">
+        <entry name="boltVisible" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="chargingAnimationSpeed" type="Double">
+        <entry name="bubblesVisible" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="breatheVisible" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="breatheDuration" type="Double">
             <default>1.5</default>
         </entry>
-        <entry name="chargingAnimationDelay" type="Double">
+        <entry name="breatheDelay" type="Double">
             <default>10.0</default>
         </entry>
     </group>
-    <group name="Misc">
-        <entry name="valueOffset" type="Int">
-            <default>0.0</default>
-        </entry>
-        <entry name="valueRateOffset" type="Int">
-            <default>0.0</default>
-        </entry>
-        <entry name="updateInterval" type="Double">
+    <group name="MiscSettings">
+        <entry name="batteryUpdateInterval" type="Double">
             <default>5.0</default>
+        </entry>
+        <entry name="dimensionsUpdateInterval" type="Double">
+            <default>0.5</default>
+        </entry>
+        <entry name="chargeBarValueOffset" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="rateBarValueOffset" type="Int">
+            <default>0</default>
+        </entry>
+        <entry name="normalModeSize" type="Int">
+            <default>1</default>
         </entry>
         <entry name="devicePath" type="String">
             <default>null</default>

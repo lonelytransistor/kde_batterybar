@@ -20,23 +20,16 @@ import QtGraphicalEffects 1.0
 Item {
     id: root
     height: width
-
-    property int bubbleDuration: 0
-    width: 1
-    x: 0
-    y: 0
+    property int speed: 0
 
     Rectangle {
         id: bubble
         anchors.fill: parent
         visible: false
-
-        Behavior on y {
-            NumberAnimation {
-                duration: root.bubbleDuration
-                easing.type: Easing.OutInBounce
-            }
-        }
+        color: "transparent"
+        border.color: "black"
+        border.width: 1
+        radius: parent.width*0.5
 
         RadialGradient {
             anchors.fill: parent
@@ -47,10 +40,18 @@ Item {
                 GradientStop { position: 1.0; color: "#10000000" }
             }
         }
-        color: "transparent"
-        border.color: "black"
-        border.width: 1
-        radius: parent.width*0.5
+        Behavior on x {
+            NumberAnimation {
+                duration: root.speed
+                easing.type: Easing.OutInBounce
+            }
+        }
+        Behavior on y {
+            NumberAnimation {
+                duration: root.speed
+                easing.type: Easing.OutInBounce
+            }
+        }
     }
     OpacityMask {
         anchors.fill: bubble

@@ -25,15 +25,18 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Kirigami.FormLayout {
     id: miscSettings
     
-    property alias cfg_updateInterval: updateIntervalSpinBox.value
-    property alias cfg_valueOffset: valueOffsetSpinBox.value
-    property alias cfg_valueRateOffset: valueRateOffsetSpinBox.value
-    property alias cfg_devicePath: deviceNameComboBox.devicePath
+    property alias cfg_batteryUpdateInterval: batteryUpdateIntervalSpinBox.value
+    property alias cfg_dimensionsUpdateInterval: dimensionsUpdateIntervalSpinBox.value
+    property alias cfg_devicePath: devicePathComboBox.devicePath
+
+    property alias cfg_chargeBarValueOffset: chargeBarValueOffsetSpinBox.value
+    property alias cfg_rateBarValueOffset: rateBarValueOffsetSpinBox.value
+    property alias cfg_normalModeSize: normalModeSizeSpinBox.value
     
     QQC1.SpinBox {
-        id: updateIntervalSpinBox
+        id: batteryUpdateIntervalSpinBox
 
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Update interval:")
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Update battery info interval:")
 
         decimals: 1
         stepSize: 0.1
@@ -41,27 +44,17 @@ Kirigami.FormLayout {
         suffix: i18ncp("@item:valuesuffix spacing to number + unit (seconds)", " second", " seconds")
     }
     QQC1.SpinBox {
-        id: valueOffsetSpinBox
+        id: dimensionsUpdateIntervalSpinBox
 
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Battery charge offset value:")
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Update applet location interval:")
 
-        decimals: 2
-        stepSize: 0.01
-        maximumValue: 1.0
-        minimumValue: -1.0
-    }
-    QQC1.SpinBox {
-        id: valueRateOffsetSpinBox
-
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Battery discharge offset value:")
-
-        decimals: 2
-        stepSize: 0.01
-        maximumValue: 1.0
-        minimumValue: -1.0
+        decimals: 1
+        stepSize: 0.1
+        minimumValue: 0.1
+        suffix: i18ncp("@item:valuesuffix spacing to number + unit (seconds)", " second", " seconds")
     }
     QQC2.ComboBox {
-        id: deviceNameComboBox
+        id: devicePathComboBox
 
         property string devicePath
         Kirigami.FormData.label: i18n("Device name:")
@@ -81,19 +74,19 @@ Kirigami.FormLayout {
                     }
                     devicePaths = paths
 
-                    deviceNameComboBox.model.clear()
+                    devicePathComboBox.model.clear()
                     for (var ix=0; ix<devicePaths.length; ix++) {
                         var name = devicePaths[ix].replace(/.*?\/(\w+)$/gm, "$1")
-                        deviceNameComboBox.model.append({
+                        devicePathComboBox.model.append({
                             "label": name,
                             "path": devicePaths[ix],
                             "name": name,
                             "ix": ix})
                     }
 
-                    var ix = devicePaths.indexOf(deviceNameComboBox.devicePath)
+                    var ix = devicePaths.indexOf(devicePathComboBox.devicePath)
                     ix = ix>0 ? ix : 0
-                    deviceNameComboBox.currentIndex = ix
+                    devicePathComboBox.currentIndex = ix
                 }
             }
         }
@@ -107,5 +100,33 @@ Kirigami.FormLayout {
         }
         textRole: "label"
         onActivated: devicePath = deviceNameDataSource.devicePaths[currentIndex]
+    }
+    QQC1.SpinBox {
+        id: chargeBarValueOffsetSpinBox
+
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Battery charge value offset:")
+
+        decimals: 0
+        stepSize: 10
+        suffix: i18ncp("@item:valuesuffix spacing to number + unit (Wh)", " Wh", " Wh")
+    }
+    QQC1.SpinBox {
+        id: rateBarValueOffsetSpinBox
+
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Battery rate value offset:")
+
+        decimals: 0
+        stepSize: 10
+        suffix: i18ncp("@item:valuesuffix spacing to number + unit (Wh)", " Wh", " Wh")
+    }
+    QQC1.SpinBox {
+        id: normalModeSizeSpinBox
+
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Container size:")
+
+        decimals: 0
+        stepSize: 1
+        minimumValue: 1
+        suffix: i18n("px")
     }
 }

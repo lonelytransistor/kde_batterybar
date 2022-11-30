@@ -25,24 +25,54 @@ Item {
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     Plasmoid.backgroundHints: PlasmaCore.Types.DefaultBackground | PlasmaCore.Types.ConfigurableBackground
 
-    property int spacerWidth: plasmoid.configuration.spacerWidth
-    readonly property int editModeSize: 32
-
-    property bool vertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
-    property bool planar: (plasmoid.formFactor == PlasmaCore.Types.Planar)
-
     property var containmentInterface: null
     property var appletInterface: null
-    property bool editMode: pEditMode
-
-    property int maxLength: 1
     readonly property bool pEditMode: containmentInterface ? containmentInterface.editMode : false
-    onParentChanged: {
+    readonly property int normalModeSize: Global.normalModeSize
+    onParentChanged: updateParent()
+    onPEditModeChanged: updateDimensions()
+    onNormalModeSizeChanged: updateDimensions()
+
+    function _updateDimensions() {
+        let size = Global.editMode ? Global.editModeSize : normalModeSize
+        if (Global.isVertical) {
+            root.Layout.preferredHeight = size
+            root.Layout.maximumdHeight = size
+            root.Layout.minimumHeight = size
+            root.implicitHeight = size
+            root.height = size
+            root.appletInterface.Layout.preferredHeight = size
+            root.appletInterface.Layout.maximumHeight = size
+            root.appletInterface.Layout.minimumHeight = size
+            root.appletInterface.implicitHeight = size
+            root.appletInterface.height = size
+        } else {
+            root.Layout.preferredWidth = size
+            root.Layout.maximumWidth = size
+            root.Layout.minimumWidth = size
+            root.implicitWidth = size
+            root.width = size
+            root.appletInterface.Layout.preferredWidth = size
+            root.appletInterface.Layout.maximumWidth = size
+            root.appletInterface.Layout.minimumWidth = size
+            root.appletInterface.implicitWidth = size
+            root.appletInterface.width = size
+        }
+
+        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
+        Global.maxLen = root.containmentInterface.width - gpoint.x
+        Global.editMode = root.pEditMode
+    }
+    function updateDimensions() {
+        if (root.appletInterface && root.containmentInterface) {
+            updateDimensionsDelay.running = true
+        }
+    }
+    function updateParent() {
         if (parent) {
             for (var obj = root, depth = 0; !!obj; obj = obj.parent, depth++) {
                 if (obj.toString().startsWith('AppletInterface')) {
                     root.appletInterface = obj
-                    console.log("Applet interface has width=" + obj.width + " height=" + obj.height + " offset=" + obj.x + " y=" + obj.y)
                 }
                 if (obj.toString().startsWith('ContainmentInterface')) {
                     if (typeof obj['editMode'] === 'boolean') {
@@ -61,38 +91,23 @@ Item {
             updateDimensions()
         }
     }
-    onPEditModeChanged: editModeDelay.running = true
-    onEditModeChanged: updateDimensions()
-    onSpacerWidthChanged: updateDimensions()
-    Timer { // FIXME: find a better way for this.
-        id: updateDimensionsOccasionally
-        interval: 2000
+    Timer {
+        id: updateDimensionsDelay
+        interval: 10
+        running: false
+        repeat: false
+        onTriggered: _updateDimensions()
+    }
+    Timer {
+        id: updateDimensionsCyclical
+        interval: Global.dimensionsUpdateInterval
         running: true
         repeat: true
         onTriggered: updateDimensions()
     }
-    Timer {
-        id: editModeDelay
-        interval: 1
-        running: false
-        repeat: false
-        onTriggered: root.editMode = root.pEditMode
-    }
     Image {
         anchors.fill: parent
         source: "file:///usr/share/icons/breeze/status/32/battery-full-charging.svg"
-        visible: root.editMode
-    }
-    function updateDimensions() {
-        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
-        root.maxLength = root.containmentInterface.width - gpoint.x
-
-        let _width = editMode ? editModeSize : root.spacerWidth
-        root.Layout.preferredWidth = _width
-        root.Layout.minimumWidth = _width
-        root.width = _width
-        root.Layout.preferredHeight = _width
-        root.Layout.minimumHeight = _width
-        root.height = _width
+        visible: Global.editMode
     }
 }

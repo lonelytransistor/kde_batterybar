@@ -24,50 +24,59 @@ import org.kde.kquickcontrols 2.0 as KQuickControls
 Kirigami.FormLayout {
     id: animationSettings
     
-    property alias cfg_plugInAnimation: plugInAnimationCheckBox.checked
-    property alias cfg_plugOutAnimation: plugOutAnimationCheckBox.checked
-    property alias cfg_chargingAnimation: chargingAnimationCheckBox.checked
-    property alias cfg_chargingAnimationSpeed: chargingAnimationSpeedSpinBox.value
-    property alias cfg_chargingAnimationDelay: chargingAnimationDelaySpinBox.value
+    property alias cfg_animationsVisible: animationsVisibleCheckBox.checked
+    property alias cfg_breatheVisible: breatheVisibleCheckBox.checked
+    property alias cfg_boltVisible: boltVisibleCheckBox.checked
+    property alias cfg_bubblesVisible: bubblesVisibleCheckBox.checked
+    property alias cfg_breatheDuration: breatheDurationSpinBox.value
+    property alias cfg_breatheDelay: breatheDelaySpinBox.value
     
     QQC2.CheckBox {
-        id: plugInAnimationCheckBox
+        id: animationsVisibleCheckBox
 
         Kirigami.FormData.label: i18nc("@label", "Animations:")
-        text: i18nc("@option:check", "Charging start")
+        text: i18nc("@option:check", "Enabled")
     }
     QQC2.CheckBox {
-        id: plugOutAnimationCheckBox
-        
-        text: i18nc("@option:check", "Charging stop")
+        id: boltVisibleCheckBox
+
+        text: i18nc("@option:check", "Bolt (charger connect)")
+        enabled: animationsVisibleCheckBox.checked
     }
     QQC2.CheckBox {
-        id: chargingAnimationCheckBox
+        id: bubblesVisibleCheckBox
         
-        text: i18nc("@option:check", "Charging breathing")
+        text: i18nc("@option:check", "Bubbles (charger disconnect)")
+        enabled: animationsVisibleCheckBox.checked
+    }
+    QQC2.CheckBox {
+        id: breatheVisibleCheckBox
+
+        text: i18nc("@option:check", "Breathing (charging)")
+        enabled: animationsVisibleCheckBox.checked
     }
     QQC1.SpinBox {
-        id: chargingAnimationSpeedSpinBox
+        id: breatheDurationSpinBox
         
-        Kirigami.FormData.label: i18n("Charging breathing speed:")
+        Kirigami.FormData.label: i18n("Breathing speed:")
         
         decimals: 1
         stepSize: 0.1
         minimumValue: 0
         suffix: i18n("s")
         
-        enabled: chargingAnimationCheckBox.checked
+        enabled: breatheVisibleCheckBox.checked && animationsVisibleCheckBox.checked
     }
     QQC1.SpinBox {
-        id: chargingAnimationDelaySpinBox
+        id: breatheDelaySpinBox
         
-        Kirigami.FormData.label: i18n("Charging breathing delay:")
+        Kirigami.FormData.label: i18n("Breathing delay:")
         
         decimals: 1
         stepSize: 0.1
         minimumValue: 0
         suffix: i18n("s")
         
-        enabled: chargingAnimationCheckBox.checked
+        enabled: breatheVisibleCheckBox.checked && animationsVisibleCheckBox.checked
     }
 }

@@ -15,47 +15,18 @@
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
 import QtQuick 2.2
-import QtQuick.Window 2.0
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
-Rectangle {
+Bar {
     id: root
-    property bool vertical: false
-    property int maxLength: 0
 
-    anchors.top:    (( plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) && !root.vertical) ? parent.top    : undefined
-    anchors.bottom: ((!plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) && !root.vertical) ? parent.bottom : undefined
-    anchors.left:   (( plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) &&  root.vertical) ? parent.left   : undefined
-    anchors.right:  ((!plasmoid.configuration.rateTopAlign || plasmoid.configuration.rateHeight == 0) &&  root.vertical) ? parent.right  : undefined
+    alignToTopLeft: Global.rateBarTopAlign
+    flip:          (Global.batteryIsCharging && Global.rateBarFlipOnCharging) || (!Global.batteryIsCharging && Global.rateBarFlip)
+    offset:         Global.rateBarOffset
+    fill:           Global.rateBarHeight == 0
+    margin:         Global.rateBarMargin
+    length:        (Global.rateBarValueOffset + Global.batteryRate) * Global.rateBarRescale * Global.maxLen / Global.batteryFull + Global.rateBarOffset
+    thickness:      Global.rateBarHeight
 
-    anchors.topMargin:    anchors.top    ? plasmoid.configuration.rateMargin : 0
-    anchors.bottomMargin: anchors.bottom ? plasmoid.configuration.rateMargin : 0
-    anchors.leftMargin:   anchors.left   ? plasmoid.configuration.rateMargin : 0
-    anchors.rightMargin:  anchors.right  ? plasmoid.configuration.rateMargin : 0
-
-    x: !root.vertical ? plasmoid.configuration.startOffset : undefined
-    y:  root.vertical ? plasmoid.configuration.startOffset : undefined
-
-    property var thickness: (plasmoid.configuration.rateHeight == 0 ? undefined : plasmoid.configuration.rateHeight)
-    property var length:    (plasmoid.configuration.valueRateOffset + batteryData.p_rate*plasmoid.configuration.rateRescale)*maxLength
-    width:  root.vertical ? thickness : length
-    height: root.vertical ? length : thickness
-    opacity: plasmoid.configuration.rateOpacity/255
-
-    color: plasmoid.configuration.rateColor
-    Behavior on width {
-        NumberAnimation {
-            duration: 1000
-            easing.type: Easing.InOutQuad
-        }
-    }
-    Behavior on height {
-        NumberAnimation {
-            duration: 1000
-            easing.type: Easing.InOutQuad
-        }
-    }
+    opacity:        Global.batteryIsCharging ? Global.rateBarChargingOpacity : Global.rateBarOpacity
+    color:          Global.batteryIsCharging ? Global.rateBarChargingColor : Global.rateBarColor
 }

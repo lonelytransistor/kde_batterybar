@@ -15,40 +15,20 @@
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
 import QtQuick 2.2
-import QtGraphicalEffects 1.0
 
-Item {
+Rectangle {
     id: root
-    property int maxWidth: 0
-    property bool vertical: false
-    property bool discharging: false
+    visible: Global.animationsVisible
+    clip: true
+    color: "transparent"
 
-    property alias plugOutAnimation: bubblesContainer.plugOutAnimation
-    property var bubbleDuration: [1500, 1800, 700, 1200, 1400, 600, 1000, 800, 1200]
-    property alias plugInAnimation: boltContainer.plugInAnimation
-    property int boltDuration: 500
-
-    Bolt {
-        id: boltContainer
-
-        maxWidth: root.maxWidth
-        discharging: root.discharging
-        boltDuration: root.boltDuration
-    }
     Bubbles {
         id: bubblesContainer
-
-        maxWidth: root.maxWidth
-        discharging: root.discharging
-        bubbleDuration: root.bubbleDuration
     }
-    OpacityMask {
-        anchors.fill: bubblesContainer
-        source: bubblesContainer
-        maskSource: Rectangle {
-            width: bubblesContainer.height
-            height: bubblesContainer.width
-            radius: bubblesContainer.radius
-        }
+    Bolt {
+        id: boltContainer
+    }
+    Breathing {
+        id: breathingContainer
     }
 }
