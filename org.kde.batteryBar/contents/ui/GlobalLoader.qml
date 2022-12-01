@@ -30,6 +30,8 @@ QtObject {
     onMaxLenChanged: Global.maxLen = maxLen
     property bool editMode: false
     onEditModeChanged: Global.editMode = editMode
+    property int editModeSize: Math.max(parent.width, parent.height)
+    onEditModeSizeChanged: Global.editModeSize = editModeSize
 
     // Animations
     property bool animationsVisible: plasmoid.configuration.animationsVisible
@@ -46,12 +48,10 @@ QtObject {
     onBreatheDelayChanged: Global.breatheDelay = breatheDelay
 
     // Charge bar
-    property bool chargeBarTopAlign: plasmoid.configuration.chargeBarTopAlign
-    onChargeBarTopAlignChanged: Global.chargeBarTopAlign = chargeBarTopAlign
-    property bool chargeBarFlip: plasmoid.configuration.chargeBarFlip
-    onChargeBarFlipChanged: Global.chargeBarFlip = chargeBarFlip
-    property bool chargeBarFlipOnCharging: plasmoid.configuration.chargeBarFlipOnCharging
-    onChargeBarFlipOnChargingChanged: Global.chargeBarFlipOnCharging = chargeBarFlipOnCharging
+    property string chargeBarAlign: plasmoid.configuration.chargeBarAlign
+    onChargeBarAlignChanged: Global.chargeBarAlign = chargeBarAlign
+    property string chargeBarChargingAlign: plasmoid.configuration.chargeBarChargingAlign
+    onChargeBarChargingAlignChanged: Global.chargeBarChargingAlign = chargeBarChargingAlign
     property color chargeBarColor: plasmoid.configuration.chargeBarColor
     onChargeBarColorChanged: Global.chargeBarColor = chargeBarColor
     property double chargeBarOpacity: plasmoid.configuration.chargeBarOpacity/255
@@ -68,12 +68,10 @@ QtObject {
     onChargeBarMarginChanged: Global.chargeBarMargin = chargeBarMargin
 
     // Rate bar
-    property bool rateBarTopAlign: plasmoid.configuration.rateBarTopAlign
-    onRateBarTopAlignChanged: Global.rateBarTopAlign = rateBarTopAlign
-    property bool rateBarFlip: plasmoid.configuration.rateBarFlip
-    onRateBarFlipChanged: Global.rateBarFlip = rateBarFlip
-    property bool rateBarFlipOnCharging: plasmoid.configuration.rateBarFlipOnCharging
-    onRateBarFlipOnChargingChanged: Global.rateBarFlipOnCharging = rateBarFlipOnCharging
+    property string rateBarAlign: plasmoid.configuration.rateBarAlign
+    onRateBarAlignChanged: Global.rateBarAlign = rateBarAlign
+    property string rateBarChargingAlign: plasmoid.configuration.rateBarChargingAlign
+    onRateBarChargingAlignChanged: Global.rateBarChargingAlign = rateBarChargingAlign
     property color rateBarColor: plasmoid.configuration.rateBarColor
     onRateBarColorChanged: Global.rateBarColor = rateBarColor
     property double rateBarOpacity: plasmoid.configuration.rateBarOpacity/255

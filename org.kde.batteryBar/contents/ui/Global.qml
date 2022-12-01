@@ -20,6 +20,47 @@ import QtQuick 2.2
 QtObject {
     id: root
 
+    property var modelVertical: ListModel {
+        ListElement {
+            label: "Top-left"
+            align: "top-left" }
+        ListElement {
+            label: "Top-right"
+            align: "top-right" }
+        ListElement {
+            label: "Bottom-left"
+            align: "bottom-left" }
+        ListElement {
+            label: "Bottom-right"
+            align: "bottom-right" }
+        ListElement {
+            label: "Top, fill left-right"
+            align: "fill-top" }
+        ListElement {
+            label: "Bottom, fill left-right"
+            align: "fill-bottom" }
+    }
+    property var modelHorizontal: ListModel {
+        ListElement {
+            label: "Top-left"
+            align: "top-left" }
+        ListElement {
+            label: "Top-right"
+            align: "top-right" }
+        ListElement {
+            label: "Bottom-left"
+            align: "bottom-left" }
+        ListElement {
+            label: "Bottom-right"
+            align: "bottom-right" }
+        ListElement {
+            label: "Left, fill top-bottom"
+            align: "fill-left" }
+        ListElement {
+            label: "Right, fill top-bottom"
+            align: "fill-right" }
+    }
+
     // Info
     property bool isVertical
     property bool isPlanar
@@ -42,12 +83,11 @@ QtObject {
     property bool breatheVisible
     property int breatheDuration
     property int breatheDelay
-    property double breatheOpacity: 0.7
+    property double breatheOpacity: 0.3
 
     // Charge bar
-    property bool chargeBarTopAlign
-    property bool chargeBarFlip
-    property bool chargeBarFlipOnCharging
+    property string chargeBarAlign
+    property string chargeBarChargingAlign
     property color chargeBarColor
     property double chargeBarOpacity
     property color chargeBarChargingColor
@@ -57,9 +97,8 @@ QtObject {
     property int chargeBarMargin
 
     // Rate bar
-    property bool rateBarTopAlign
-    property bool rateBarFlip
-    property bool rateBarFlipOnCharging
+    property string rateBarAlign
+    property string rateBarChargingAlign
     property color rateBarColor
     property double rateBarOpacity
     property color rateBarChargingColor

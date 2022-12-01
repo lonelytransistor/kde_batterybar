@@ -30,7 +30,7 @@ Kirigami.FormLayout {
     property alias cfg_bubblesVisible: bubblesVisibleCheckBox.checked
     property alias cfg_breatheDuration: breatheDurationSpinBox.value
     property alias cfg_breatheDelay: breatheDelaySpinBox.value
-    
+
     QQC2.CheckBox {
         id: animationsVisibleCheckBox
 

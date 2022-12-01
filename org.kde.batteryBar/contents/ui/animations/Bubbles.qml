@@ -16,6 +16,7 @@
  */
 import QtQuick 2.2
 import QtGraphicalEffects 1.0
+import ".."
 
 Rectangle {
     id: root
@@ -23,7 +24,7 @@ Rectangle {
     color: "transparent"
     opacity: Global.batteryIsCharging ? 0.0 : 0.75
     visible: Global.bubblesVisible
-    readonly property var speed: [1.5, 1.8, 0.7, 1.2, 1.4, 0.6, 1.0, 0.8, 1.20].map(function(x) { return x*1.5*Global.maxLen })
+    readonly property var speed: [1.5, 1.8, 0.7, 1.2, 1.4, 0.6, 1.0, 0.8, 1.2, 0.9, 0.8, 1.2, 1.1].map(function(x) { return x*1.5*Global.maxLen })
 
     Item {
         x: (Global.batteryIsCharging ? -200 : Global.maxLen+200)
@@ -100,6 +101,44 @@ Rectangle {
 
             y: (root.charging ? height/3 : parent.height-2*height/3)
             width: parent.height/6
+        }
+    }
+    Item {
+        x: (Global.batteryIsCharging ? -200-Global.maxLen*0.5 : Global.maxLen+200)
+        y: 0
+        height: parent.height
+        width: parent.width
+
+        Behavior on x {
+            NumberAnimation {
+                duration: root.speed[8]
+                easing.type: Easing.InOutQuad
+            }
+        }
+        Behavior on y {
+            NumberAnimation {
+                duration: root.speed[8]
+                easing.type: Easing.InOutQuad
+            }
+        }
+        Bubble {
+            speed: root.speed[9]
+
+            y: (root.charging ? height : height/3)
+            width: parent.height/3
+        }
+        Bubble {
+            speed: root.speed[10]
+
+            x: parent.children[0].width*3
+            y: (root.charging ? height/2 : height*2)
+            width: parent.height/4
+        }
+        Bubble {
+            speed: root.speed[11]
+
+            y: (root.charging ? height/3 : parent.height-2*height/3)
+            width: parent.height/4
         }
     }
 }

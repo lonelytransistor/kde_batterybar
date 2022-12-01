@@ -18,15 +18,19 @@ import QtQuick 2.5
 import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Controls 1.4 as QQC1
 
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.kquickcontrols 2.0 as KQuickControls
 
+import ".."
+
 Kirigami.FormLayout {
     id: chargeBarSettings
-    
-    property alias cfg_chargeBarTopAlign: chargeBarTopAlignCheckBox.checked
-    property alias cfg_chargeBarFlip: chargeBarFlipCheckBox.checked
-    property alias cfg_chargeBarFlipOnCharging: chargeBarFlipOnChargingCheckBox.checked
+
+    property alias cfg_chargeBarAlign: chargeBarAlignComboBox.value
+    property alias cfg_chargeBarChargingAlign: chargeBarChargingAlignComboBox.value
     property alias cfg_chargeBarColor: chargeBarColorPicker.color
     property alias cfg_chargeBarOpacity: chargeBarOpacitySpinBox.value
     property alias cfg_chargeBarChargingColor: chargeBarChargingColorPicker.color
@@ -34,6 +38,8 @@ Kirigami.FormLayout {
     property alias cfg_chargeBarOffset: chargeBarOffsetSpinBox.value
     property alias cfg_chargeBarHeight: chargeBarHeightSpinBox.value
     property alias cfg_chargeBarMargin: chargeBarMarginSpinBox.value
+
+    property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     
     KQuickControls.ColorButton {
         id: chargeBarColorPicker
@@ -97,25 +103,41 @@ Kirigami.FormLayout {
         value: chargeBarChargingOpacitySpinBox.value
         onValueChanged: chargeBarChargingOpacitySpinBox.value = value
     }
-    QQC2.CheckBox {
-        id: chargeBarTopAlignCheckBox
+    QQC2.ComboBox {
+        id: chargeBarAlignComboBox
 
-        Kirigami.FormData.label: i18nc("@label", "Charge bar location:")
-        text: i18nc("@option:check", "Aligned to top / aligned to left")
+        Kirigami.FormData.label: i18n("Charge bar alignment:")
 
-        enabled: chargeBarHeightSpinBox.value != 0
+        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        textRole: "label"
+        property string value
+        currentIndex: {
+            for (let ix=0; ix<model.count; ix++)
+                if (model.get(ix).align == value)
+                    return ix
+        }
+        onActivated: {
+            value = model.get(currentIndex).align
+            cfg_chargeBarAlign = value
+        }
     }
-    QQC2.CheckBox {
-        id: chargeBarFlipCheckBox
+    QQC2.ComboBox {
+        id: chargeBarChargingAlignComboBox
 
-        Kirigami.FormData.label: i18nc("@label", "Charge bar location when not charging:")
-        text: i18nc("@option:check", "From right to left / from bottom to top")
-    }
-    QQC2.CheckBox {
-        id: chargeBarFlipOnChargingCheckBox
+        Kirigami.FormData.label: i18n("Charge bar alignment when charging:")
 
-        Kirigami.FormData.label: i18nc("@label", "Charge bar location when charging:")
-        text: i18nc("@option:check", "From right to left / from bottom to top")
+        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        textRole: "label"
+        property string value
+        currentIndex: {
+            for (let ix=0; ix<model.count; ix++)
+                if (model.get(ix).align == value)
+                    return ix
+        }
+        onActivated: {
+            value = model.get(currentIndex).align
+            cfg_chargeBarChargingAlign = value
+        }
     }
     QQC1.SpinBox {
         id: chargeBarOffsetSpinBox
@@ -131,12 +153,16 @@ Kirigami.FormLayout {
     QQC1.SpinBox {
         id: chargeBarHeightSpinBox
 
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Charge bar thickness (set 0 to fill the panel):")
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Charge bar thickness:")
 
         decimals: 0
         stepSize: 1
-        minimumValue: 0
+        minimumValue: 1
         suffix: i18n("px")
+        enabled: {
+            console.log(chargeBarChargingAlignComboBox.value.includes("fill") + ":" + chargeBarAlignComboBox.value.includes("fill"))
+            return !chargeBarChargingAlignComboBox.value.includes("fill") && !chargeBarAlignComboBox.value.includes("fill")
+        }
     }
     QQC1.SpinBox {
         id: chargeBarMarginSpinBox

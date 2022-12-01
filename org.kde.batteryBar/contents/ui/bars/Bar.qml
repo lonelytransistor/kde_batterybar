@@ -16,61 +16,62 @@
  */
 import QtQuick 2.2
 import QtGraphicalEffects 1.0
+import ".."
 
 Rectangle {
     id: root
 
-    property bool alignToTopLeft
-    property bool flip
-    property bool fill
+    property string align
     property int margin
     property int offset
     property int length
     property int thickness
+
+    property bool flipX
+    property bool flipY
     onMarginChanged: updateAnchors()
     onOffsetChanged: updateAnchors()
-    onAlignToTopLeftChanged: updateAnchors()
-    onFillChanged: updateAnchors()
-    function _updateAnchors(data) {
+    onAlignChanged: updateAnchors()
+    function _updateAnchors(data, fX = false, fY = false) {
         anchors.top    = data.top    ? parent.top    : undefined
         anchors.bottom = data.bottom ? parent.bottom : undefined
         anchors.left   = data.left   ? parent.left   : undefined
         anchors.right  = data.right  ? parent.right  : undefined
 
-        anchors.topMargin    = data.top    ? margin + ( Global.isVertical ? offset : 0) : undefined
-        anchors.bottomMargin = data.bottom ? margin : undefined
-        anchors.leftMargin   = data.left   ? margin + (!Global.isVertical ? offset : 0) : undefined
-        anchors.rightMargin  = data.right  ? margin : undefined
+        anchors.topMargin    = data.top    ? margin : 0
+        anchors.bottomMargin = data.bottom ? margin : 0
+        anchors.leftMargin   = data.left   ? margin : 0
+        anchors.rightMargin  = data.right  ? margin : 0
+
+        flipX = fX
+        flipY = fY
     }
     function updateAnchors() {
-        if (fill) {
-            if (Global.isVertical) {
-                _updateAnchors({top: 1, left: 1, right: 1})
-            } else {
-                _updateAnchors({top: 1, bottom: 1, left: 1})
-            }
-        } else if (!Global.isVertical) {
-            if (alignToTopLeft && !flip) {
-                _updateAnchors({top: 1, left: 1})
-            } else if (alignToTopLeft && flip) {
-                _updateAnchors({top: 1, right: 1})
-            } else if (!alignToTopLeft && !flip) {
-                _updateAnchors({bottom: 1, left: 1})
-            } else if (!alignToTopLeft && flip) {
-                _updateAnchors({bottom: 1, right: 1})
-            }
-        } else {
-            if (alignToTopLeft && !flip) {
-                _updateAnchors({top: 1, left: 1})
-            } else if (alignToTopLeft && flip) {
-                _updateAnchors({bottom: 1, left: 1})
-            } else if (!alignToTopLeft && !flip) {
-                _updateAnchors({top: 1, right: 1})
-            } else if (!alignToTopLeft && flip) {
-                _updateAnchors({bottom: 1, right: 1})
-            }
+        if (align == "top-left") {
+            _updateAnchors({top: 1})
+        } else if (align == "top-right") {
+            _updateAnchors({top: 1}, true)
+        } else if (align == "bottom-left") {
+            _updateAnchors({bottom: 1})
+        } else if (align == "bottom-right") {
+            _updateAnchors({bottom: 1}, true)
+        } else if (align == "fill-left" && !Global.isVertical) {
+            _updateAnchors({top: 1, bottom: 1})
+        } else if (align == "fill-right" && !Global.isVertical) {
+            _updateAnchors({top: 1, bottom: 1}, true)
+        } else if (align == "fill-top" && Global.isVertical) {
+            _updateAnchors({left: 1, right: 1})
+        } else if (align == "fill-bottom" && Global.isVertical) {
+            _updateAnchors({left: 1, right: 1}, false, true)
+        // Fix invalid states:
+        } else if ((align == "fill-left" || align == "fill-right") && Global.isVertical) {
+            _updateAnchors({left: 1, right: 1})
+        } else if ((align == "fill-top" || align == "fill-bottom") && !Global.isVertical) {
+            _updateAnchors({top: 1, bottom: 1})
         }
     }
+    x: flipX ? Global.maxLen-offset-length : offset
+    y: flipY ? Global.maxLen-offset-length : offset
     width:  Global.isVertical ? thickness : length
     height: Global.isVertical ? length : thickness
 

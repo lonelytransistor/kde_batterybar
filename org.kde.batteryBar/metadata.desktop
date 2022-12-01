@@ -3,7 +3,7 @@ Name=Battery bar
 Comment=Plasmoid for displaying battery status as a long horizontal bar.
 
 Type=Service
-Icon=battery
+Icon=ui/icon.svg
 
 X-KDE-PluginInfo-Author=lonelytransistor
 X-KDE-PluginInfo-Email=lonelytransistor@protonmail.com

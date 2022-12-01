@@ -20,6 +20,8 @@ import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import "bars"
+import "animations"
 
 MainContainer {
     id: root
@@ -42,13 +44,13 @@ MainContainer {
         color: "transparent"
 
         Repeater {
-            model: 10
+            model: 20
             Rectangle {
                 anchors.top: rateBarSegments.top
                 anchors.bottom: rateBarSegments.bottom
 
                 color: Global.rateBarSegmentsColor
-                opacity: Global.rateBarSegmentsOpacity/255
+                opacity: Global.rateBarSegmentsOpacity
 
                 x: rateBar.length*(2+index) - 2
                 width: 4

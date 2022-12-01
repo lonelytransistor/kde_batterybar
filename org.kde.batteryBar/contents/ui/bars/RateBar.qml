@@ -15,18 +15,17 @@
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
 import QtQuick 2.2
+import ".."
 
 Bar {
     id: root
 
-    alignToTopLeft: Global.chargeBarTopAlign
-    flip:          (Global.batteryIsCharging && Global.chargeBarFlipOnCharging) || (!Global.batteryIsCharging && Global.chargeBarFlip)
-    offset:         Global.chargeBarOffset
-    fill:           Global.chargeBarHeight == 0
-    margin:         Global.chargeBarMargin
-    length:        (Global.chargeBarValueOffset + Global.batteryNow) * Global.maxLen / Global.batteryFull + Global.chargeBarOffset
-    thickness:      Global.chargeBarHeight
+    align:          Global.batteryIsCharging ? Global.rateBarChargingAlign : Global.rateBarAlign
+    offset:         Global.rateBarOffset
+    margin:         Global.rateBarMargin
+    length:        (Global.rateBarValueOffset + Global.batteryRate) * Global.rateBarRescale * Global.maxLen / Global.batteryFull + Global.rateBarOffset
+    thickness:      Global.rateBarHeight
 
-    opacity:        Global.batteryIsCharging ? Global.chargeBarChargingOpacity : Global.chargeBarOpacity
-    color:          Global.batteryIsCharging ? Global.chargeBarChargingColor : Global.chargeBarColor
+    opacity:        Global.batteryIsCharging ? Global.rateBarChargingOpacity : Global.rateBarOpacity
+    color:          Global.batteryIsCharging ? Global.rateBarChargingColor : Global.rateBarColor
 }

@@ -34,6 +34,10 @@ Item {
     onNormalModeSizeChanged: updateDimensions()
 
     function _updateDimensions() {
+        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
+        Global.maxLen = root.containmentInterface.width - gpoint.x
+        Global.editMode = root.pEditMode
+
         let size = Global.editMode ? Global.editModeSize : normalModeSize
         if (Global.isVertical) {
             root.Layout.preferredHeight = size
@@ -58,10 +62,6 @@ Item {
             root.appletInterface.implicitWidth = size
             root.appletInterface.width = size
         }
-
-        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
-        Global.maxLen = root.containmentInterface.width - gpoint.x
-        Global.editMode = root.pEditMode
     }
     function updateDimensions() {
         if (root.appletInterface && root.containmentInterface) {
@@ -107,7 +107,7 @@ Item {
     }
     Image {
         anchors.fill: parent
-        source: "file:///usr/share/icons/breeze/status/32/battery-full-charging.svg"
+        source: "icon.svg"
         visible: Global.editMode
     }
 }

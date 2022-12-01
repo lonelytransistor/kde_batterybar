@@ -18,15 +18,19 @@ import QtQuick 2.5
 import QtQuick.Controls 2.5 as QQC2
 import QtQuick.Controls 1.4 as QQC1
 
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+
 import org.kde.kirigami 2.5 as Kirigami
 import org.kde.kquickcontrols 2.0 as KQuickControls
+
+import ".."
 
 Kirigami.FormLayout {
     id: rateBarSettings
     
-    property alias cfg_rateBarTopAlign: rateBarTopAlignCheckBox.checked
-    property alias cfg_rateBarFlip: rateBarFlipCheckBox.checked
-    property alias cfg_rateBarFlipOnCharging: rateBarFlipOnChargingCheckBox.checked
+    property alias cfg_rateBarAlign: rateBarAlignComboBox.value
+    property alias cfg_rateBarChargingAlign: rateBarChargingAlignComboBox.value
     property alias cfg_rateBarColor: rateBarColorPicker.color
     property alias cfg_rateBarOpacity: rateBarOpacitySpinBox.value
     property alias cfg_rateBarChargingColor: rateBarChargingColorPicker.color
@@ -37,6 +41,8 @@ Kirigami.FormLayout {
     property alias cfg_rateBarHeight: rateBarHeightSpinBox.value
     property alias cfg_rateBarMargin: rateBarMarginSpinBox.value
     property alias cfg_rateBarRescale: rateBarRescaleSpinBox.value
+
+    property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     
     KQuickControls.ColorButton {
         id: rateBarColorPicker
@@ -131,25 +137,41 @@ Kirigami.FormLayout {
         value: rateBarSegmentsOpacitySpinBox.value
         onValueChanged: rateBarSegmentsOpacitySpinBox.value = value
     }
-    QQC2.CheckBox {
-        id: rateBarTopAlignCheckBox
+    QQC2.ComboBox {
+        id: rateBarAlignComboBox
 
-        Kirigami.FormData.label: i18nc("@label", "Rate bar location:")
-        text: i18nc("@option:check", "Aligned to top / aligned to left")
+        Kirigami.FormData.label: i18n("Rate bar alignment:")
 
-        enabled: rateBarHeightSpinBox.value != 0
+        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        textRole: "label"
+        property string value
+        currentIndex: {
+            for (let ix=0; ix<model.count; ix++)
+                if (model.get(ix).align == value)
+                    return ix
+        }
+        onActivated: {
+            cfg_rateBarAlign = model.get(currentIndex).align
+            value = cfg_chargeBarChargingAlign.align
+        }
     }
-    QQC2.CheckBox {
-        id: rateBarFlipCheckBox
+    QQC2.ComboBox {
+        id: rateBarChargingAlignComboBox
 
-        Kirigami.FormData.label: i18nc("@label", "Rate bar location when not charging:")
-        text: i18nc("@option:check", "From right to left / from bottom to top")
-    }
-    QQC2.CheckBox {
-        id: rateBarFlipOnChargingCheckBox
+        Kirigami.FormData.label: i18n("Rate bar alignment when charging:")
 
-        Kirigami.FormData.label: i18nc("@label", "Rate bar location when charging:")
-        text: i18nc("@option:check", "From right to left / from bottom to top")
+        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        textRole: "label"
+        property string value
+        currentIndex: {
+            for (let ix=0; ix<model.count; ix++)
+                if (model.get(ix).align == value)
+                    return ix
+        }
+        onActivated: {
+            cfg_rateBarChargingAlign = model.get(currentIndex).align
+            value = cfg_chargeBarChargingAlign.align
+        }
     }
     QQC1.SpinBox {
         id: rateBarOffsetSpinBox
@@ -165,12 +187,13 @@ Kirigami.FormLayout {
     QQC1.SpinBox {
         id: rateBarHeightSpinBox
 
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Rate bar thickness (set 0 to fill the panel):")
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Rate bar thickness:")
 
         decimals: 0
         stepSize: 1
-        minimumValue: 0
+        minimumValue: 1
         suffix: i18n("px")
+        enabled: !rateBarChargingAlignComboBox.value.includes("fill") && !rateBarAlignComboBox.value.includes("fill")
     }
     QQC1.SpinBox {
         id: rateBarMarginSpinBox

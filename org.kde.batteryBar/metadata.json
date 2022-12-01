@@ -3,7 +3,7 @@
 		"Name": "Battery bar",
 		"Description": "Plasmoid for displaying battery status as a long horizontal bar.",
 
-		"Icon": "battery",
+		"Icon": "ui/icon.svg",
 
 		"Authors": [
 			{
