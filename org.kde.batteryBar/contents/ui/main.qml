@@ -40,7 +40,7 @@ MainContainer {
         anchors.bottom: rateBar.bottom
         anchors.left: chargeBar.left
         anchors.right: chargeBar.right
-        clip: true
+        clip: !Global.batteryIsCharging
         color: "transparent"
 
         Repeater {
@@ -52,8 +52,16 @@ MainContainer {
                 color: Global.rateBarSegmentsColor
                 opacity: Global.rateBarSegmentsOpacity
 
-                x: rateBar.length*(2+index) - 2
+                x: rateBar.flipX ? Global.maxLen-rateBar.offset-rateBar.length*(2+index) : rateBar.length*(2+index)
+                y: rateBar.flipY ? Global.maxLen-rateBar.offset-rateBar.length*(2+index) : rateBar.length*(2+index)+rateBar.offset
                 width: 4
+
+                Behavior on x {
+                    NumberAnimation {
+                        duration: 1000
+                        easing.type: Easing.InQuad
+                    }
+                }
             }
         }
     }

@@ -21,29 +21,27 @@ import ".."
 Rectangle {
     id: root
 
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
+    anchors.fill: parent
+    color: "transparent"
     visible: Global.boltVisible
     opacity: Global.batteryIsCharging ? 0.7 : 0.0
-    color: "transparent"
 
-    x: (Global.batteryIsCharging ? Global.maxLen + 200 : -200)
-    Behavior on x {
-        NumberAnimation {
-            duration: Global.maxLen*2
-            easing.type: Easing.InQuad
-        }
-    }
     Rectangle {
-        y: -parent.height*1.5
+        x: Global.batteryIsCharging ? Global.maxLen+200 : -200
+        y: 0
         width: 200
-        height: parent.height*8
-        transform: Rotation { origin.x: parent.width; origin.y: parent.height; angle: 30}
+        height: parent.height
 
+        Behavior on x {
+            NumberAnimation {
+                duration: Global.maxLen*2
+                easing.type: Easing.InQuad
+            }
+        }
         LinearGradient {
             anchors.fill: parent
             start: Qt.point(0, 0)
-            end: Qt.point(parent.width, 0)
+            end: Qt.point(parent.width, parent.height)
             gradient: Gradient {
                 GradientStop { position: 0.00; color: "#00000000" }
                 GradientStop { position: 0.50; color: "#A0FFFFFF" }

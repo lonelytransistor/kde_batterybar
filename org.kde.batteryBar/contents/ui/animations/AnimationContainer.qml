@@ -19,9 +19,9 @@ import ".."
 
 Rectangle {
     id: root
+    color: "transparent"
     visible: Global.animationsVisible
     clip: true
-    color: "transparent"
 
     Bubbles {
         id: bubblesContainer

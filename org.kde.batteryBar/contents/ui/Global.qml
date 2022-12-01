@@ -83,7 +83,7 @@ QtObject {
     property bool breatheVisible
     property int breatheDuration
     property int breatheDelay
-    property double breatheOpacity: 0.3
+    property double breatheOpacity: 0.2
 
     // Charge bar
     property string chargeBarAlign
