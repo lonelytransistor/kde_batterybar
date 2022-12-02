@@ -61,9 +61,9 @@ QtObject {
     property bool editMode
 
     // Battery
-    property int batteryNow: 1
-    property int batteryRate: 2
-    property int batteryFull: 4
+    property double batteryNow: 1
+    property double batteryRate: 2
+    property double batteryFull: 4
     property bool batteryIsCharging: false
 
     // Size

@@ -52,7 +52,8 @@ MainContainer {
                 color: Global.rateBarSegmentsColor
                 opacity: Global.rateBarSegmentsOpacity
 
-                x: rateBar.x + (rateBar.flip ? -1 : 1)*rateBar.width*(2+index)
+                x: (rateBar.flip ? Global.maxLen+rateBar.offset-rateBar.width : rateBar.offset) + rateBar.flip ? rateBar.width*(2+index) : -rateBar.width*(2+index)
+                //x: rateBar.x + (rateBar.flip ? -1 : 1)*rateBar.width*(2+index)
                 width: 4
 
                 Behavior on x {

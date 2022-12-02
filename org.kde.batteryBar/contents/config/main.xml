@@ -12,9 +12,6 @@
         <entry name="chargeBarChargingAlign" type="String">
             <default>fill-left</default>
         </entry>
-        <entry name="chargeBarFlipOnCharging" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="chargeBarColor" type="Color">
             <default>#00ff00</default>
         </entry>
