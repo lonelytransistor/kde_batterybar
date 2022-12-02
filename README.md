@@ -1,15 +1,15 @@
 # Battery bar for KDE Plasma
 ## Description
-This plasmoid adds a battery bar to a horizontally oriented panel in KDE Plasma.
-Add it to the very beginning of a panel or place it in a spot of choosing and adjust the offset in config.
+This plasmoid adds a battery bar to the background of a KDE Plasma panel.
+Add it to the beginning of a panel or place it in a spot of choosing and adjust the offset accordingly in the config.
 
 ## Screenshots
+![Screenshot here](screenshot3.png)
 ![Screenshot here](screenshot2.png)
-![Screenshot here](screenshot.png)
+![Screenshot here](screenshot1.png)
 
 ## Usage
-This plasmoid adds a battery bar to a horizontally oriented panel in KDE Plasma.
-The trick used here is an overflow of the QML widget's elements into its container. The battery bar is a simple rectangle, however it is significantly larger than the container advertised to KDE Plasma. That means, that for the plasmoid to work, it **must** be placed at the very beginning of a horizontal panel that fills the entire screen. The container's size is determined by the value of a spinbox marked *Spacer width* in the configuration. Do not set it too low to avoid problems with clicking on the applet when in edit mode.
+The trick used is an overflow of the QML widget's elements into its container. The applet itself is a small rectangle, however the bars are significantly larger than the container advertised to KDE Plasma. The container's size can be modified via a setting called *Container size* to create a separator of adjustable width.
 
 The applet adds two battery bars:
 - main bar (green by default) - fills the screen based on the percentage of power left in the battery,
