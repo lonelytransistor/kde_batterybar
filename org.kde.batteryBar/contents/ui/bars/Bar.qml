@@ -24,15 +24,12 @@ Rectangle {
     property string align
     property int margin
     property int offset
-    property int length
-    property int thickness
+    property bool flip
 
-    property bool flipX
-    property bool flipY
     onMarginChanged: updateAnchors()
     onOffsetChanged: updateAnchors()
     onAlignChanged: updateAnchors()
-    function _updateAnchors(data, fX = false, fY = false) {
+    function _updateAnchors(data, f = false) {
         anchors.top    = data.top    ? parent.top    : undefined
         anchors.bottom = data.bottom ? parent.bottom : undefined
         anchors.left   = data.left   ? parent.left   : undefined
@@ -43,37 +40,40 @@ Rectangle {
         anchors.leftMargin   = data.left   ? margin : 0
         anchors.rightMargin  = data.right  ? margin : 0
 
-        flipX = fX
-        flipY = fY
+        flip = f
     }
     function updateAnchors() {
-        if (align == "top-left") {
-            _updateAnchors({top: 1})
-        } else if (align == "top-right") {
-            _updateAnchors({top: 1}, true)
-        } else if (align == "bottom-left") {
-            _updateAnchors({bottom: 1})
-        } else if (align == "bottom-right") {
-            _updateAnchors({bottom: 1}, true)
-        } else if (align == "fill-left" && !Global.isVertical) {
-            _updateAnchors({top: 1, bottom: 1})
-        } else if (align == "fill-right" && !Global.isVertical) {
-            _updateAnchors({top: 1, bottom: 1}, true)
-        } else if (align == "fill-top" && Global.isVertical) {
-            _updateAnchors({left: 1, right: 1})
-        } else if (align == "fill-bottom" && Global.isVertical) {
-            _updateAnchors({left: 1, right: 1}, false, true)
-        // Fix invalid states:
-        } else if ((align == "fill-left" || align == "fill-right") && Global.isVertical) {
-            _updateAnchors({left: 1, right: 1})
-        } else if ((align == "fill-top" || align == "fill-bottom") && !Global.isVertical) {
-            _updateAnchors({top: 1, bottom: 1})
+        if (Global.isVertical) {
+            if (align == "bottom-left") {
+                _updateAnchors({top: 1})
+            } else if (align == "bottom-right") {
+                _updateAnchors({top: 1}, true)
+            } else if (align == "top-left") {
+                _updateAnchors({bottom: 1})
+            } else if (align == "top-right") {
+                _updateAnchors({bottom: 1}, true)
+            } else if (align == "fill-left" || align == "fill-top") {
+                _updateAnchors({top: 1, bottom: 1})
+            } else if (align == "fill-right" || align == "fill-bottom") {
+                _updateAnchors({top: 1, bottom: 1}, true)
+            }
+        } else {
+            if (align == "top-left") {
+                _updateAnchors({top: 1})
+            } else if (align == "top-right") {
+                _updateAnchors({top: 1}, true)
+            } else if (align == "bottom-left") {
+                _updateAnchors({bottom: 1})
+            } else if (align == "bottom-right") {
+                _updateAnchors({bottom: 1}, true)
+            } else if (align == "fill-left" || align == "fill-top") {
+                _updateAnchors({top: 1, bottom: 1})
+            } else if (align == "fill-right" || align == "fill-bottom") {
+                _updateAnchors({top: 1, bottom: 1}, true)
+            }
         }
     }
-    x: flipX ? Global.maxLen-offset-length : offset
-    y: flipY ? Global.maxLen-offset-length : offset
-    width:  Global.isVertical ? thickness : length
-    height: Global.isVertical ? length : thickness
+    x: flip ? Global.maxLen-offset-width : offset
 
     Behavior on y {
         NumberAnimation {

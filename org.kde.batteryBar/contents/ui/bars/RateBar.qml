@@ -23,8 +23,8 @@ Bar {
     align:          Global.batteryIsCharging ? Global.rateBarChargingAlign : Global.rateBarAlign
     offset:         Global.rateBarOffset
     margin:         Global.rateBarMargin
-    length:        (Global.rateBarValueOffset + Global.batteryRate) * Global.rateBarRescale * Global.maxLen / Global.batteryFull + Global.rateBarOffset
-    thickness:      Global.rateBarHeight
+    width:         (Global.rateBarValueOffset + Global.batteryRate) * Global.rateBarRescale * Global.maxLen / Global.batteryFull + Global.rateBarOffset
+    height:         Global.rateBarHeight
 
     opacity:        Global.batteryIsCharging ? Global.rateBarChargingOpacity : Global.rateBarOpacity
     color:          Global.batteryIsCharging ? Global.rateBarChargingColor : Global.rateBarColor

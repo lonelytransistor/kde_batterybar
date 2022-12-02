@@ -16,6 +16,7 @@
  */
 import QtQuick 2.2
 import QtQuick.Layouts 1.1
+import QtGraphicalEffects 1.0
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
@@ -34,34 +35,32 @@ Item {
     onNormalModeSizeChanged: updateDimensions()
 
     function _updateDimensions() {
+        let size = Global.editMode ? Global.editModeSize : normalModeSize
+
         var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
-        Global.maxLen = root.containmentInterface.width - gpoint.x
+        Global.containerWidth = root.containmentInterface.width
+        Global.containerHeight = root.containmentInterface.height
+        if (root.appletInterface.width > size)
+            Global.appletWidth = root.appletInterface.width
+        if (root.appletInterface.height > size)
+            Global.appletHeight = root.appletInterface.height
+        if (Global.isVertical) {
+            Global.maxLen = root.containmentInterface.height - gpoint.y
+        } else {
+            Global.maxLen = root.containmentInterface.width - gpoint.x
+        }
         Global.editMode = root.pEditMode
 
-        let size = Global.editMode ? Global.editModeSize : normalModeSize
-        if (Global.isVertical) {
-            root.Layout.preferredHeight = size
-            root.Layout.maximumdHeight = size
-            root.Layout.minimumHeight = size
-            root.implicitHeight = size
-            root.height = size
-            root.appletInterface.Layout.preferredHeight = size
-            root.appletInterface.Layout.maximumHeight = size
-            root.appletInterface.Layout.minimumHeight = size
-            root.appletInterface.implicitHeight = size
-            root.appletInterface.height = size
-        } else {
-            root.Layout.preferredWidth = size
-            root.Layout.maximumWidth = size
-            root.Layout.minimumWidth = size
-            root.implicitWidth = size
-            root.width = size
-            root.appletInterface.Layout.preferredWidth = size
-            root.appletInterface.Layout.maximumWidth = size
-            root.appletInterface.Layout.minimumWidth = size
-            root.appletInterface.implicitWidth = size
-            root.appletInterface.width = size
-        }
+        root.Layout.preferredWidth = size
+        root.Layout.maximumWidth = size
+        root.Layout.minimumWidth = size
+        root.implicitWidth = size
+        root.width = size
+        root.appletInterface.Layout.preferredWidth = size
+        root.appletInterface.Layout.maximumWidth = size
+        root.appletInterface.Layout.minimumWidth = size
+        root.appletInterface.implicitWidth = size
+        root.appletInterface.width = size
     }
     function updateDimensions() {
         if (root.appletInterface && root.containmentInterface) {
@@ -106,6 +105,7 @@ Item {
         onTriggered: updateDimensions()
     }
     Image {
+        id: editIcon
         anchors.fill: parent
         source: "icon.svg"
         visible: Global.editMode

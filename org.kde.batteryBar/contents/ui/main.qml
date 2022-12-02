@@ -36,27 +36,32 @@ MainContainer {
     }
     Rectangle {
         id: rateBarSegments
-        anchors.top: rateBar.top
+        anchors.top:    rateBar.top
         anchors.bottom: rateBar.bottom
-        anchors.left: chargeBar.left
-        anchors.right: chargeBar.right
+        anchors.left:   chargeBar.left
+        anchors.right:  chargeBar.right
         clip: !Global.batteryIsCharging
         color: "transparent"
 
         Repeater {
             model: 20
             Rectangle {
-                anchors.top: rateBarSegments.top
-                anchors.bottom: rateBarSegments.bottom
+                anchors.top    : rateBarSegments.top
+                anchors.bottom : rateBarSegments.bottom
 
                 color: Global.rateBarSegmentsColor
                 opacity: Global.rateBarSegmentsOpacity
 
-                x: rateBar.flipX ? Global.maxLen-rateBar.offset-rateBar.length*(2+index) : rateBar.length*(2+index)
-                y: rateBar.flipY ? Global.maxLen-rateBar.offset-rateBar.length*(2+index) : rateBar.length*(2+index)+rateBar.offset
+                x: rateBar.x + (rateBar.flip ? -1 : 1)*rateBar.width*(2+index)
                 width: 4
 
                 Behavior on x {
+                    NumberAnimation {
+                        duration: 1000
+                        easing.type: Easing.InQuad
+                    }
+                }
+                Behavior on y {
                     NumberAnimation {
                         duration: 1000
                         easing.type: Easing.InQuad
@@ -68,4 +73,15 @@ MainContainer {
     AnimationContainer {
         anchors.fill: chargeBar
     }
+    transform: [
+        Rotation {
+            origin { x: 0; y: 0 }
+            angle: Global.isVertical ? -90 : 0
+        },
+        Rotation {
+            origin { x: 0; y: 0 }
+            axis { x: 1; y: 0; z: 0 }
+            angle: Global.isVertical ? 180 : 0
+        }
+    ]
 }

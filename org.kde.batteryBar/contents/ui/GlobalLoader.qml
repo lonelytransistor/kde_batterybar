@@ -30,7 +30,7 @@ QtObject {
     onMaxLenChanged: Global.maxLen = maxLen
     property bool editMode: false
     onEditModeChanged: Global.editMode = editMode
-    property int editModeSize: Math.max(parent.width, parent.height)
+    property int editModeSize: Math.max(parent ? parent.width : 32, parent ? parent.height : 32)
     onEditModeSizeChanged: Global.editModeSize = editModeSize
 
     // Animations

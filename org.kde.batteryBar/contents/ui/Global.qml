@@ -20,50 +20,43 @@ import QtQuick 2.2
 QtObject {
     id: root
 
-    property var modelVertical: ListModel {
-        ListElement {
-            label: "Top-left"
-            align: "top-left" }
-        ListElement {
-            label: "Top-right"
-            align: "top-right" }
-        ListElement {
-            label: "Bottom-left"
-            align: "bottom-left" }
-        ListElement {
-            label: "Bottom-right"
-            align: "bottom-right" }
-        ListElement {
-            label: "Top, fill left-right"
-            align: "fill-top" }
-        ListElement {
-            label: "Bottom, fill left-right"
-            align: "fill-bottom" }
+    // Settings
+    property var alignmentArray: {
+        "top-left":     [0, "Top-left",                "all"],
+        "top-right":    [1, "Top-right",               "all"],
+        "bottom-left":  [2, "Bottom-left",             "all"],
+        "bottom-right": [3, "Bottom-right",            "all"],
+        "fill-top":     [4, "Top, fill left-right",    "vertical"],
+        "fill-bottom":  [5, "Bottom, fill left-right", "vertical"],
+        "fill-left":    [4, "Left, fill top-bottom",   "horizontal"],
+        "fill-right":   [5, "Right, fill top-bottom",  "horizontal"]
     }
-    property var modelHorizontal: ListModel {
-        ListElement {
-            label: "Top-left"
-            align: "top-left" }
-        ListElement {
-            label: "Top-right"
-            align: "top-right" }
-        ListElement {
-            label: "Bottom-left"
-            align: "bottom-left" }
-        ListElement {
-            label: "Bottom-right"
-            align: "bottom-right" }
-        ListElement {
-            label: "Left, fill top-bottom"
-            align: "fill-left" }
-        ListElement {
-            label: "Right, fill top-bottom"
-            align: "fill-right" }
+    property var modelVertical: ListModel {}
+    property var modelHorizontal: ListModel {}
+    onAlignmentArrayChanged: {
+        console.log("a")
+        updateModel(modelVertical,   ["all", "vertical"])
+        updateModel(modelHorizontal, ["all", "horizontal"])
+    }
+    function updateModel(model, types) {
+        model.clear()
+        for (const [key, value] of Object.entries(alignmentArray)) {
+            if (types.includes(value[2])) {
+                model.append({
+                    "label": value[1],
+                    "align": key
+                })
+            }
+        }
     }
 
     // Info
     property bool isVertical
     property bool isPlanar
+    property int containerWidth: 1
+    property int containerHeight: 1
+    property int appletWidth: 1
+    property int appletHeight: 1
     property int maxLen: 1
     property bool editMode
 

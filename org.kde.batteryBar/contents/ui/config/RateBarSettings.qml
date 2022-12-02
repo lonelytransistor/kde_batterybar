@@ -145,14 +145,10 @@ Kirigami.FormLayout {
         model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
         textRole: "label"
         property string value
-        currentIndex: {
-            for (let ix=0; ix<model.count; ix++)
-                if (model.get(ix).align == value)
-                    return ix
-        }
+        currentIndex: Global.alignmentArray[value][0]
         onActivated: {
             cfg_rateBarAlign = model.get(currentIndex).align
-            value = cfg_chargeBarChargingAlign.align
+            value = cfg_rateBarChargingAlign.align
         }
     }
     QQC2.ComboBox {
@@ -163,14 +159,10 @@ Kirigami.FormLayout {
         model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
         textRole: "label"
         property string value
-        currentIndex: {
-            for (let ix=0; ix<model.count; ix++)
-                if (model.get(ix).align == value)
-                    return ix
-        }
+        currentIndex: Global.alignmentArray[value][0]
         onActivated: {
             cfg_rateBarChargingAlign = model.get(currentIndex).align
-            value = cfg_chargeBarChargingAlign.align
+            value = cfg_rateBarChargingAlign.align
         }
     }
     QQC1.SpinBox {
@@ -193,7 +185,7 @@ Kirigami.FormLayout {
         stepSize: 1
         minimumValue: 1
         suffix: i18n("px")
-        enabled: !rateBarChargingAlignComboBox.value.includes("fill") && !rateBarAlignComboBox.value.includes("fill")
+        enabled: !rateBarChargingAlignComboBox.value.includes("fill") || !rateBarAlignComboBox.value.includes("fill")
     }
     QQC1.SpinBox {
         id: rateBarMarginSpinBox
