@@ -44,17 +44,16 @@ Kirigami.FormLayout {
                 let re = /^(.*?(\w+))$/g
                 let match = re.exec(paths[ix])
                 let data = {"label": type + ": " + match[2], "path": type + ":" + match[1]}
-                _paths.push(match[1])
+                _paths.push(data.path)
                 devicePathComboBox.model.append(data)
             }
             return _paths
         }
         function updateData() {
             devicePathComboBox.model.clear()
-            devicePaths = []
-            devicePaths += updateModel("dBus", devicePathsDBus)
-            devicePaths += updateModel("PM", devicePathsPM)
-
+            devicePaths = updateModel("dBus", devicePathsDBus)
+            devicePaths = devicePaths.concat(updateModel("PM", devicePathsPM))
+console.log(devicePathComboBox.devicePath + ":" + JSON.stringify(devicePaths))
             let ix = devicePaths.indexOf(devicePathComboBox.devicePath)
             ix = ix>0 ? ix : 0
             devicePathComboBox.currentIndex = ix
