@@ -22,7 +22,7 @@ Item {
 
     property string devicePath: Global.devicePath
     onDevicePathChanged: {
-        let re = /^(dBus|PM)\s*:\s*(.*)$/g
+        let re = /^(dBus|PM):(.*)$/g
         let match = re.exec(devicePath)
         if (match && match.length >= 3) {
             let type = match[1]
@@ -62,7 +62,11 @@ Item {
                 batteryPercent = data[devicePath]["Percent"]
                 batteryNow = data[devicePath]["Energy"]
                 batteryRate = batteryNow / (data["Battery"]["Remaining msec"]/(3600*1000))
-                batteryFull = 100*batteryNow/batteryPercent
+                if (data[devicePath]["Capacity"] > batteryNow) {
+                    batteryFull = data[devicePath]["Capacity"]
+                } else {
+                    batteryFull = 100*batteryNow/batteryPercent
+                }
                 batteryIsCharging = data[devicePath]["State"] != "Discharging"
 
                 if (Global.batteryPercent != batteryPercent)
@@ -87,7 +91,6 @@ Item {
         property int errorCount: 0
         readonly property int errorMax: 10
         property string devicePath
-        property double batteryPercentage: 0.0
         onDevicePathChanged: {
             if (devicePath) {
                 var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
@@ -118,20 +121,20 @@ Item {
                 var tmp_var = parseFloat(data.stdout)
                 switch (batteryCMDs[sourceName]) {
                     case 'p_now':
-                        if (tmp_var > 0)
-                            batteryPercentage = tmp_var
-                        if (Global.batteryFull > 0 && Math.round(100*Global.batteryNow/Global.batteryFull) != batteryPercentage) {
+                        if (tmp_var > 0 && tmp_var <= 100)
+                            Global.batteryPercent = tmp_var
+                        if (Global.batteryFull > 0 && Math.round(100*Global.batteryNow/Global.batteryFull) != Global.batteryPercent) {
                             if (Global.batteryFull > 0 && Global.batteryFull >= Global.batteryNow) {
-                                tmp_var = batteryPercentage*Global.batteryFull/100
+                                tmp_var = Global.batteryPercent*Global.batteryFull/100
                                 if (Global.batteryNow != tmp_var)
                                     Global.batteryNow = tmp_var
-                            } else if (Global.batteryNow > 0 && batteryPercentage != 0) {
-                                tmp_var = 100*Global.batteryNow/batteryPercentage
+                            } else if (Global.batteryNow > 0 && Global.batteryPercent != 0) {
+                                tmp_var = 100*Global.batteryNow/Global.batteryPercent
                                 if (Global.batteryFull != tmp_var)
                                     Global.batteryFull = tmp_var
                             } else {
-                                if (Global.batteryNow != batteryPercentage)
-                                    Global.batteryNow = batteryPercentage
+                                if (Global.batteryNow != Global.batteryPercent)
+                                    Global.batteryNow = Global.batteryPercent
                                 if (Global.batteryFull != 100)
                                     Global.batteryFull = 100
                                 console.log("Missing battery data, roughly extrapolated, but energy rate measurement will be invalid.")
@@ -153,8 +156,8 @@ Item {
                     case 'e_full':
                         if (tmp_var != 0 && tmp_var > Global.batteryNow && Global.batteryFull != tmp_var) {
                             Global.batteryFull = tmp_var
-                        } else if (Global.batteryNow > 0 && batteryPercentage > 0) {
-                            tmp_var = 100*Global.batteryNow/batteryPercentage
+                        } else if (Global.batteryNow > 0 && Global.batteryPercent > 0) {
+                            tmp_var = 100*Global.batteryNow/Global.batteryPercent
                             Global.batteryFull = tmp_var
                             console.log("Invalid battery capacity returned by UPower. Extrapolated.")
                         }

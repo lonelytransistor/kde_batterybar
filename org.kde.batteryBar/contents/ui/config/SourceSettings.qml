@@ -36,29 +36,28 @@ Kirigami.FormLayout {
         property var devicePathsDBus: []
         property var devicePathsPM: []
         property var devicePaths: []
-        onDevicePathsDBusChanged: concatData()
-        onDevicePathsPMChanged: concatData()
-        onDevicePathsChanged: {
-            devicePathComboBox.model.clear()
-            for (let ix=0; ix<devicePaths.length; ix++) {
-                let re = /^(dBus|PM)\s*:\s*(.*)$/g
-                let match = re.exec(devicePaths[ix])
-                devicePathComboBox.model.append({"label": devicePaths[ix], "type": match[0]})
+        onDevicePathsDBusChanged: updateData()
+        onDevicePathsPMChanged: updateData()
+        function updateModel(type, paths) {
+            let _paths = []
+            for (let ix=0; paths && ix<paths.length; ix++) {
+                let re = /^(.*?(\w+))$/g
+                let match = re.exec(paths[ix])
+                let data = {"label": type + ": " + match[2], "path": type + ":" + match[1]}
+                _paths.push(match[1])
+                devicePathComboBox.model.append(data)
             }
+            return _paths
+        }
+        function updateData() {
+            devicePathComboBox.model.clear()
+            devicePaths = []
+            devicePaths += updateModel("dBus", devicePathsDBus)
+            devicePaths += updateModel("PM", devicePathsPM)
 
             let ix = devicePaths.indexOf(devicePathComboBox.devicePath)
             ix = ix>0 ? ix : 0
             devicePathComboBox.currentIndex = ix
-        }
-        function concatData() {
-            let paths = []
-            for (let ix=0; ix<devicePathsDBus.length; ix++) {
-                paths.push("dBus : " + devicePathsDBus[ix])
-            }
-            for (let ix=0; ix<devicePathsPM.length; ix++) {
-                paths.push("PM : " + devicePathsPM[ix])
-            }
-            devicePaths = paths
         }
 
         PlasmaCore.DataSource {
@@ -70,9 +69,9 @@ Kirigami.FormLayout {
             onNewData: {
                 if (data['exit code'] == 0) {
                     let _paths = data.stdout.match(/(\/\w+)+/g)
-                    let paths = ["Dummy"]
+                    let paths = ["/Dummy"]
                     for (let ix=0; ix<_paths.length; ix++) {
-                        paths.push(_paths[ix].replace(/.*?\/(\w+)$/gm, "$1"))
+                        paths.push(_paths[ix])
                     }
                     devicePaths = paths
                 }
@@ -93,7 +92,7 @@ Kirigami.FormLayout {
                 let _paths = data["Battery"]["Sources"]
                 let paths = []
                 for (let ix=0; ix<_paths.length; ix++) {
-                    paths.push(_paths[ix] )
+                    paths.push(_paths[ix])
                 }
                 devicePaths = paths
             }
@@ -105,7 +104,10 @@ Kirigami.FormLayout {
             }
         }
         textRole: "label"
-        onActivated: devicePath = devicePaths[currentIndex]
+        onActivated: {
+            devicePath = model.get(currentIndex).path
+            console.log(devicePath)
+        }
     }
     QQC1.SpinBox {
         id: batteryUpdateIntervalSpinBox
