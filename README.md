@@ -22,6 +22,6 @@ Simple animations are provided:
 
 ## Installation
 ### Local
-Install the .plasmoid file in the releases of this repo.
+Install the *.plasmoid* file in the releases of this repo.
 ### Global (Arch-based)
 A *PKGBUILD* is provided within this repo (in releases) to install this plasmoid globally on Arch based distros.

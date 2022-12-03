@@ -5,6 +5,14 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name=""/>
 
+    <group name="SourceSettings">
+        <entry name="batteryUpdateInterval" type="Double">
+            <default>5.0</default>
+        </entry>
+        <entry name="devicePath" type="String">
+            <default>null</default>
+        </entry>
+    </group>
     <group name="ChargeBarSettings">
         <entry name="chargeBarAlign" type="String">
             <default>fill-left</default>
@@ -93,9 +101,6 @@
         </entry>
     </group>
     <group name="MiscSettings">
-        <entry name="batteryUpdateInterval" type="Double">
-            <default>5.0</default>
-        </entry>
         <entry name="dimensionsUpdateInterval" type="Double">
             <default>0.5</default>
         </entry>
@@ -107,9 +112,6 @@
         </entry>
         <entry name="normalModeSize" type="Int">
             <default>1</default>
-        </entry>
-        <entry name="devicePath" type="String">
-            <default>null</default>
         </entry>
     </group>
     

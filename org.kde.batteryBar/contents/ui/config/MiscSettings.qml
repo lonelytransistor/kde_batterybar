@@ -25,24 +25,12 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Kirigami.FormLayout {
     id: miscSettings
     
-    property alias cfg_batteryUpdateInterval: batteryUpdateIntervalSpinBox.value
     property alias cfg_dimensionsUpdateInterval: dimensionsUpdateIntervalSpinBox.value
-    property alias cfg_devicePath: devicePathComboBox.devicePath
 
     property alias cfg_chargeBarValueOffset: chargeBarValueOffsetSpinBox.value
     property alias cfg_rateBarValueOffset: rateBarValueOffsetSpinBox.value
     property alias cfg_normalModeSize: normalModeSizeSpinBox.value
     
-    QQC1.SpinBox {
-        id: batteryUpdateIntervalSpinBox
-
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Update battery info interval:")
-
-        decimals: 1
-        stepSize: 0.1
-        minimumValue: 0.1
-        suffix: i18ncp("@item:valuesuffix spacing to number + unit (seconds)", " second", " seconds")
-    }
     QQC1.SpinBox {
         id: dimensionsUpdateIntervalSpinBox
 
@@ -52,54 +40,6 @@ Kirigami.FormLayout {
         stepSize: 0.1
         minimumValue: 0.1
         suffix: i18ncp("@item:valuesuffix spacing to number + unit (seconds)", " second", " seconds")
-    }
-    QQC2.ComboBox {
-        id: devicePathComboBox
-
-        property string devicePath
-        Kirigami.FormData.label: i18n("Device name:")
-
-        PlasmaCore.DataSource {
-            id: deviceNameDataSource
-            engine: "executable"
-            connectedSources: ["qdbus --literal --system org.freedesktop.UPower /org/freedesktop/UPower org.freedesktop.UPower.EnumerateDevices"]
-            property var devicePaths: []
-
-            onNewData: {
-                if (data['exit code'] == 0) {
-                    var _paths = data.stdout.match(/(\/\w+)+/g)
-                    var paths = ["/Dummy"]
-                    for (var ix=0; ix<_paths.length; ix++) {
-                        paths.push(_paths[ix])
-                    }
-                    devicePaths = paths
-
-                    devicePathComboBox.model.clear()
-                    for (var ix=0; ix<devicePaths.length; ix++) {
-                        var name = devicePaths[ix].replace(/.*?\/(\w+)$/gm, "$1")
-                        devicePathComboBox.model.append({
-                            "label": name,
-                            "path": devicePaths[ix],
-                            "name": name,
-                            "ix": ix})
-                    }
-
-                    var ix = devicePaths.indexOf(devicePathComboBox.devicePath)
-                    ix = ix>0 ? ix : 0
-                    devicePathComboBox.currentIndex = ix
-                }
-            }
-        }
-        model: ListModel {
-            ListElement {
-                label: "Dummy"
-                name: "Dummy"
-                path: "/Dummy"
-                ix: 0
-            }
-        }
-        textRole: "label"
-        onActivated: devicePath = deviceNameDataSource.devicePaths[currentIndex]
     }
     QQC1.SpinBox {
         id: chargeBarValueOffsetSpinBox

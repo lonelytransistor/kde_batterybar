@@ -19,6 +19,11 @@ import org.kde.plasma.configuration 2.0
 
 ConfigModel {
     ConfigCategory {
+         name: i18n('Data source')
+         icon: 'battery'
+         source: 'config/SourceSettings.qml'
+    }
+    ConfigCategory {
          name: i18n('Charge bar')
          icon: 'preferences-desktop-color'
          source: 'config/ChargeBarSettings.qml'
@@ -30,7 +35,7 @@ ConfigModel {
     }
     ConfigCategory {
          name: i18n('Animations')
-         icon: 'preferences-desktop-color'
+         icon: 'preferences-desktop-effects'
          source: 'config/AnimationSettings.qml'
     }
     ConfigCategory {
