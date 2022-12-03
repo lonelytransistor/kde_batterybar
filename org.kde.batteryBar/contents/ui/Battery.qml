@@ -172,6 +172,7 @@ Item {
                                 Global.batteryIsCharging = true
                         } else if (Global.batteryIsCharging) {
                             Global.batteryIsCharging = false
+                        }
                     break
                     default:
                     break
