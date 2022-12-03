@@ -21,7 +21,9 @@ Item {
     id: root
 
     property string devicePath: Global.devicePath
-    onDevicePathChanged: {
+    onDevicePathChanged: update()
+    onParentChanged: update()
+    function update() {
         let re = /^(dBus|PM):(.*)$/g
         let match = re.exec(devicePath)
         if (match && match.length >= 3) {
@@ -165,11 +167,11 @@ Item {
                     case 'b_state':
                         if (tmp_var != 2 && Global.batteryFull > 0 && Global.batteryIsCharging && Global.batteryNow/Global.batteryFull > 0.95) {
                             Global.batteryIsCharging = false
-                        } else if (tmp_var != 2 && !Global.batteryIsCharging) {
-                            Global.batteryIsCharging = true
+                        } else if (tmp_var != 2) {
+                            if (!Global.batteryIsCharging)
+                                Global.batteryIsCharging = true
                         } else if (Global.batteryIsCharging) {
                             Global.batteryIsCharging = false
-                        }
                     break
                     default:
                     break
