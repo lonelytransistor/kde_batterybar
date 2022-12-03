@@ -64,11 +64,7 @@ Item {
                 batteryPercent = data[devicePath]["Percent"]
                 batteryNow = data[devicePath]["Energy"]
                 batteryRate = batteryNow / (data["Battery"]["Remaining msec"]/(3600*1000))
-                if (data[devicePath]["Capacity"] > batteryNow) {
-                    batteryFull = data[devicePath]["Capacity"]
-                } else {
-                    batteryFull = 100*batteryNow/batteryPercent
-                }
+                batteryFull = 100*batteryNow/batteryPercent
                 batteryIsCharging = data[devicePath]["State"] != "Discharging"
 
                 if (Global.batteryPercent != batteryPercent)

@@ -53,7 +53,6 @@ Kirigami.FormLayout {
             devicePathComboBox.model.clear()
             devicePaths = updateModel("dBus", devicePathsDBus)
             devicePaths = devicePaths.concat(updateModel("PM", devicePathsPM))
-console.log(devicePathComboBox.devicePath + ":" + JSON.stringify(devicePaths))
             let ix = devicePaths.indexOf(devicePathComboBox.devicePath)
             ix = ix>0 ? ix : 0
             devicePathComboBox.currentIndex = ix
