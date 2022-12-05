@@ -10,7 +10,7 @@
             <default>5.0</default>
         </entry>
         <entry name="devicePath" type="String">
-            <default>null</default>
+            <default>dBus:/null</default>
         </entry>
     </group>
     <group name="ChargeBarSettings">
@@ -83,6 +83,9 @@
     <group name="AnimationSettings">
         <entry name="animationsVisible" type="Bool">
             <default>true</default>
+        </entry>
+        <entry name="snowVisible" type="Bool">
+            <default>false</default>
         </entry>
         <entry name="boltVisible" type="Bool">
             <default>true</default>

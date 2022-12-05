@@ -87,6 +87,7 @@ Kirigami.FormLayout {
             }
             onSourceRemoved: disconnectSource(source)
             onDataChanged: {
+                console.log(JSON.stringify(data))
                 let _paths = data["Battery"]["Sources"]
                 let paths = []
                 for (let ix=0; ix<_paths.length; ix++) {

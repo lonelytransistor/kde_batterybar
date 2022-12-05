@@ -41,6 +41,9 @@ Kirigami.FormLayout {
 
     property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     
+    QQC2.Label {
+        text: "Charge bar shows the current\nbattery charge and state."
+    }
     KQuickControls.ColorButton {
         id: chargeBarColorPicker
         Kirigami.FormData.label: i18n("Current charge bar color:")

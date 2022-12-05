@@ -34,33 +34,67 @@ Item {
     onPEditModeChanged: updateDimensions()
     onNormalModeSizeChanged: updateDimensions()
 
+    function _updateAppletSize() {
+        let size = Global.editMode ? Global.editModeSize : normalModeSize
+        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
+
+        if (Global.isVertical) {
+            if (root.height == size) {
+                updateDimensionsRetry.running = false
+                console.log("Applet size updated.")
+                return
+            }
+            Global.maxLen = root.containmentInterface.height - gpoint.y
+            root.Layout.preferredHeight = size
+            root.Layout.maximumHeight = size
+            root.Layout.minimumHeight = size
+            root.implicitHeight = size
+            root.height = size
+            root.appletInterface.Layout.preferredHeight = size
+            root.appletInterface.Layout.maximumHeight = size
+            root.appletInterface.Layout.minimumHeight = size
+            root.appletInterface.implicitHeight = size
+            root.appletInterface.height = size
+        } else {
+            if (root.width == size) {
+                updateDimensionsRetry.running = false
+                console.log("Applet size updated.")
+                return
+            }
+            Global.maxLen = root.containmentInterface.width - gpoint.x
+            root.Layout.preferredWidth = size
+            root.Layout.maximumWidth = size
+            root.Layout.minimumWidth = size
+            root.implicitWidth = size
+            root.width = size
+            root.appletInterface.Layout.preferredWidth = size
+            root.appletInterface.Layout.maximumWidth = size
+            root.appletInterface.Layout.minimumWidth = size
+            root.appletInterface.implicitWidth = size
+            root.appletInterface.width = size
+        }
+    }
     function _updateDimensions() {
         let size = Global.editMode ? Global.editModeSize : normalModeSize
 
-        var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
         Global.containerWidth = root.containmentInterface.width
         Global.containerHeight = root.containmentInterface.height
-        if (root.appletInterface.width > size)
+        if (root.appletInterface.width > size) {
             Global.appletWidth = root.appletInterface.width
-        if (root.appletInterface.height > size)
-            Global.appletHeight = root.appletInterface.height
-        if (Global.isVertical) {
-            Global.maxLen = root.containmentInterface.height - gpoint.y
-        } else {
-            Global.maxLen = root.containmentInterface.width - gpoint.x
         }
-        Global.editMode = root.pEditMode
-
-        root.Layout.preferredWidth = size
-        root.Layout.maximumWidth = size
-        root.Layout.minimumWidth = size
-        root.implicitWidth = size
-        root.width = size
-        root.appletInterface.Layout.preferredWidth = size
-        root.appletInterface.Layout.maximumWidth = size
-        root.appletInterface.Layout.minimumWidth = size
-        root.appletInterface.implicitWidth = size
-        root.appletInterface.width = size
+        if (root.appletInterface.height > size) {
+            Global.appletHeight = root.appletInterface.height
+        }
+        if (Global.editMode != root.pEditMode) {
+            Global.editMode = root.pEditMode
+            updateAppletSize()
+        }
+    }
+    function updateAppletSize() {
+        if (root.appletInterface && root.containmentInterface) {
+            updateDimensionsRetry.running = true
+            console.log("Trying to update applet size.")
+        }
     }
     function updateDimensions() {
         if (root.appletInterface && root.containmentInterface) {
@@ -96,6 +130,13 @@ Item {
         running: false
         repeat: false
         onTriggered: _updateDimensions()
+    }
+    Timer {
+        id: updateDimensionsRetry
+        interval: 10
+        running: false
+        repeat: true
+        onTriggered: _updateAppletSize()
     }
     Timer {
         id: updateDimensionsCyclical

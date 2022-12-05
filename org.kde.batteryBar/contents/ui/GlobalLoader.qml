@@ -28,7 +28,7 @@ QtObject {
     onIsPlanarChanged: Global.isPlanar = isPlanar
     property int maxLen: 1
     onMaxLenChanged: Global.maxLen = maxLen
-    property bool editMode: false
+    property bool editMode: true
     onEditModeChanged: Global.editMode = editMode
     property int editModeSize: Math.max(parent ? parent.width : 32, parent ? parent.height : 32)
     onEditModeSizeChanged: Global.editModeSize = editModeSize
@@ -36,6 +36,8 @@ QtObject {
     // Animations
     property bool animationsVisible: plasmoid.configuration.animationsVisible
     onAnimationsVisibleChanged: Global.animationsVisible = animationsVisible
+    property bool snowVisible: plasmoid.configuration.snowVisible
+    onSnowVisibleChanged: Global.snowVisible = snowVisible
     property bool boltVisible: plasmoid.configuration.boltVisible
     onBoltVisibleChanged: Global.boltVisible = boltVisible
     property bool bubblesVisible: plasmoid.configuration.bubblesVisible

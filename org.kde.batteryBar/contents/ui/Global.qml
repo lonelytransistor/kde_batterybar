@@ -34,7 +34,6 @@ QtObject {
     property var modelVertical: ListModel {}
     property var modelHorizontal: ListModel {}
     onAlignmentArrayChanged: {
-        console.log("a")
         updateModel(modelVertical,   ["all", "vertical"])
         updateModel(modelHorizontal, ["all", "horizontal"])
     }
@@ -58,7 +57,7 @@ QtObject {
     property int appletWidth: 1
     property int appletHeight: 1
     property int maxLen: 1
-    property bool editMode
+    property bool editMode: true
 
     // Battery
     property double batteryPercent: 25
@@ -72,6 +71,7 @@ QtObject {
 
     // Animations
     property bool animationsVisible
+    property bool snowVisible
     property bool boltVisible
     property bool bubblesVisible
     property bool breatheVisible

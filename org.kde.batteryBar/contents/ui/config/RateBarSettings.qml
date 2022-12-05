@@ -44,15 +44,18 @@ Kirigami.FormLayout {
 
     property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     
+    QQC2.Label {
+        text: "Rate bar shows how much battery will\ndischarge or charge during the next " + cfg_rateBarRescale + "h."
+    }
     KQuickControls.ColorButton {
         id: rateBarColorPicker
-        Kirigami.FormData.label: i18n("Discharge rate bar color:")
+        Kirigami.FormData.label: i18n("Rate bar color when discharging:")
         enabled: true
     }
     QQC1.SpinBox {
         id: rateBarOpacitySpinBox
 
-        Kirigami.FormData.label: i18n("Discharge rate bar opacity:")
+        Kirigami.FormData.label: i18n("Rate bar opacity when discharging:")
 
         decimals: 0
         stepSize: 1
@@ -77,13 +80,13 @@ Kirigami.FormLayout {
     }
     KQuickControls.ColorButton {
         id: rateBarChargingColorPicker
-        Kirigami.FormData.label: i18n("Discharge rate bar color when charging:")
+        Kirigami.FormData.label: i18n("Rate bar color when charging:")
         enabled: true
     }
     QQC1.SpinBox {
         id: rateBarChargingOpacitySpinBox
 
-        Kirigami.FormData.label: i18n("Discharge rate bar opacity when charging:")
+        Kirigami.FormData.label: i18n("Rate bar opacity when charging:")
 
         decimals: 0
         stepSize: 1
@@ -108,13 +111,13 @@ Kirigami.FormLayout {
     }
     KQuickControls.ColorButton {
         id: rateBarSegmentsColorPicker
-        Kirigami.FormData.label: i18n("Discharge rate segments color:")
+        Kirigami.FormData.label: i18n("Rate segments color:")
         enabled: true
     }
     QQC1.SpinBox {
         id: rateBarSegmentsOpacitySpinBox
 
-        Kirigami.FormData.label: i18n("Discharge rate segments opacity:")
+        Kirigami.FormData.label: i18n("Rate segments opacity:")
 
         decimals: 0
         stepSize: 1
@@ -202,9 +205,9 @@ Kirigami.FormLayout {
 
         Kirigami.FormData.label: i18nc("@label:spinbox", "Rate bar rescaler:")
 
-        decimals: 1
+        decimals: 2
         stepSize: 0.5
-        minimumValue: 0.5
+        minimumValue: 0.05
         maximumValue: 10.0
         suffix: i18n("h")
     }

@@ -32,4 +32,7 @@ Rectangle {
     Breathing {
         id: breathingContainer
     }
+    Snow {
+        id: snowContainer
+    }
 }
