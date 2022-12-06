@@ -22,37 +22,44 @@ Rectangle {
     id: root
     anchors.fill: parent
     color: "transparent"
-    opacity: 0.7
-    visible: Global.snowVisible
+    opacity: isCharging ? 0.0 : 0.75
+    visible: Global.bubblesVisible
+    property bool isCharging: Global.batteryIsCharging
+    onIsChargingChanged: {
+        if (!isCharging) {
+            particleSystem.reset()
+            emitter.pulse(emitter.lifeSpan)
+        }
+    }
 
     ParticleSystem {
         id: particleSystem
     }
     ImageParticle {
-        source: "snowflake.png"
+        source: "bubble.png"
         system: particleSystem
+        colorVariation: 0
     }
     Emitter {
+        id: emitter
         anchors {
-            top: parent.top
             left: parent.left
-            right: parent.right
+            top: parent.top
+            bottom: parent.bottom
             leftMargin: -100
-            topMargin: -parent.height
         }
-        height: 1
+        enabled: false
+        maximumEmitted: 6
+        width: 1
         system: particleSystem
-        emitRate: 40
-        lifeSpan: 6400
-        lifeSpanVariation: 400
-        size: 8
-        sizeVariation: 6
-        enabled: Global.snowVisible
+        emitRate: velocity.magnitude/100
+        lifeSpan: 4000*Global.maxLen/velocity.magnitude
+        size: parent.height/3
+        sizeVariation: size*0.9
         velocity: AngleDirection {
-            angle: 70
-            angleVariation: 20
-            magnitude: 100
-            magnitudeVariation: 25
+            angle: 0
+            magnitude: 1000
+            magnitudeVariation: magnitude/10
         }
     }
 }

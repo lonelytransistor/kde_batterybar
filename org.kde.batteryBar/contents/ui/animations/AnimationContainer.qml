@@ -23,7 +23,7 @@ Rectangle {
     visible: Global.animationsVisible
     clip: true
 
-    Bubbles {
+    Bubbles2 {
         id: bubblesContainer
     }
     Bolt {
@@ -34,5 +34,8 @@ Rectangle {
     }
     Snow {
         id: snowContainer
+    }
+    Rain {
+        id: rainContainer
     }
 }

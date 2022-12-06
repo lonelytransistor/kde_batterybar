@@ -72,6 +72,7 @@ QtObject {
     // Animations
     property bool animationsVisible
     property bool snowVisible
+    property bool rainVisible
     property bool boltVisible
     property bool bubblesVisible
     property bool breatheVisible

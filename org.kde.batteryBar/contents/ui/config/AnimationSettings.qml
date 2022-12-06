@@ -25,6 +25,7 @@ Kirigami.FormLayout {
     id: animationSettings
     
     property alias cfg_animationsVisible: animationsVisibleCheckBox.checked
+    property alias cfg_rainVisible: rainVisibleCheckBox.checked
     property alias cfg_snowVisible: snowVisibleCheckBox.checked
     property alias cfg_breatheVisible: breatheVisibleCheckBox.checked
     property alias cfg_boltVisible: boltVisibleCheckBox.checked
@@ -37,6 +38,12 @@ Kirigami.FormLayout {
 
         Kirigami.FormData.label: i18nc("@label", "Animations:")
         text: i18nc("@option:check", "Enabled")
+    }
+    QQC2.CheckBox {
+        id: rainVisibleCheckBox
+
+        text: i18nc("@option:check", "Let it rain")
+        enabled: animationsVisibleCheckBox.checked
     }
     QQC2.CheckBox {
         id: snowVisibleCheckBox

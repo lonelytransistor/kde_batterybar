@@ -23,14 +23,15 @@ Rectangle {
     anchors.fill: parent
     color: "transparent"
     opacity: 0.7
-    visible: Global.snowVisible
+    visible: Global.rainVisible
 
     ParticleSystem {
         id: particleSystem
     }
     ImageParticle {
-        source: "snowflake.png"
+        source: "tail.png"
         system: particleSystem
+        groups: ['tail']
     }
     Emitter {
         anchors {
@@ -42,17 +43,20 @@ Rectangle {
         }
         height: 1
         system: particleSystem
-        emitRate: 40
-        lifeSpan: 6400
+        emitRate: 80
+        lifeSpan: 4800
         lifeSpanVariation: 400
         size: 8
-        sizeVariation: 6
-        enabled: Global.snowVisible
-        velocity: AngleDirection {
-            angle: 70
-            angleVariation: 20
-            magnitude: 100
-            magnitudeVariation: 25
-        }
+        enabled: Global.rainVisible
+        group: 'raindrop'
+        velocity: AngleDirection { angle: 60; magnitude: 600; magnitudeVariation: 100 }
+    }
+    TrailEmitter {
+        system: particleSystem
+        size: 4
+        emitRatePerParticle: 300
+        lifeSpan: 20
+        group: 'tail'
+        follow: 'raindrop'
     }
 }

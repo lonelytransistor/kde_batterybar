@@ -36,6 +36,8 @@ QtObject {
     // Animations
     property bool animationsVisible: plasmoid.configuration.animationsVisible
     onAnimationsVisibleChanged: Global.animationsVisible = animationsVisible
+    property bool rainVisible: plasmoid.configuration.rainVisible
+    onRainVisibleChanged: Global.rainVisible = rainVisible
     property bool snowVisible: plasmoid.configuration.snowVisible
     onSnowVisibleChanged: Global.snowVisible = snowVisible
     property bool boltVisible: plasmoid.configuration.boltVisible

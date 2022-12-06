@@ -27,14 +27,14 @@ Rectangle {
     opacity: Global.batteryIsCharging ? 0.7 : 0.0
 
     Rectangle {
-        x: Global.batteryIsCharging ? Global.maxLen+200 : -200
+        x: Global.batteryIsCharging ? Global.maxLen+width : -width
         y: 0
-        width: 200
+        width: 400
         height: parent.height
 
         Behavior on x {
             NumberAnimation {
-                duration: Global.maxLen*2
+                duration: 1000
                 easing.type: Easing.InQuad
             }
         }
@@ -43,9 +43,9 @@ Rectangle {
             start: Qt.point(0, 0)
             end: Qt.point(parent.width, parent.height)
             gradient: Gradient {
-                GradientStop { position: 0.00; color: "#00000000" }
+                GradientStop { position: 0.25; color: "#00000000" }
                 GradientStop { position: 0.50; color: "#A0FFFFFF" }
-                GradientStop { position: 1.00; color: "#00000000" }
+                GradientStop { position: 0.75; color: "#00000000" }
             }
         }
         color: "transparent"
