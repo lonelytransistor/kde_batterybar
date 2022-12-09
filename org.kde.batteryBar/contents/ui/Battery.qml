@@ -21,9 +21,9 @@ Item {
     id: root
 
     property string devicePath: Global.devicePath
-    onDevicePathChanged: update()
-    onParentChanged: update()
-    function update() {
+    onDevicePathChanged: updateSources()
+    onParentChanged: updateSources()
+    function updateSources() {
         let re = /^(dBus|PM):(.*)$/g
         let match = re.exec(devicePath)
         if (match && match.length >= 3) {
@@ -39,44 +39,81 @@ Item {
             }
         }
     }
+    function truncateBattery(battery) {
+        battery.nowFraction = Math.round(battery.nowFraction*100)*0.01
+        battery.rateFraction = Math.round(battery.rateFraction*100)*0.01
+        battery.nowAbsolute = Math.round(battery.nowAbsolute*100)*0.01
+        battery.rateAbsolute = Math.round(battery.rateAbsolute*100)*0.01
+        battery.fullAbsolute = Math.round(battery.fullAbsolute*100)*0.01
+        return battery
+    }
+    function extrapolateBattery(battery) {
+        if (Math.round(battery.nowFraction*battery.fullAbsolute) != Math.round(battery.nowAbsolute)  &&  battery.fullAbsolute > battery.nowAbsolute) {
+            battery.nowAbsolute = battery.nowFraction*battery.fullAbsolute
+        }
+        if (battery.fullAbsolute < battery.nowAbsolute) {
+            battery.fullAbsolute = battery.nowAbsolute/battery.nowFraction
+        }
+        if (battery.nowFraction > 0.95) {
+            battery.isCharging = false
+        }
+        if (Math.round(100*battery.rateFraction) != Math.round(100*battery.rateAbsolute/battery.fullAbsolute)) {
+            battery.rateFraction = battery.rateAbsolute/battery.fullAbsolute
+        }
+        return battery
+    }
+    function updateBattery(battery) {
+        if (Global.batteryNowFraction  != battery.nowFraction)
+            Global.batteryNowFraction   = battery.nowFraction
+        if (Global.batteryRateFraction != battery.rateFraction)
+            Global.batteryRateFraction  = battery.rateFraction
+        if (Global.batteryNowAbsolute  != battery.nowAbsolute)
+            Global.batteryNowAbsolute   = battery.nowAbsolute
+        if (Global.batteryRateAbsolute != battery.rateAbsolute)
+            Global.batteryRateAbsolute  = battery.rateAbsolute
+        if (Global.batteryFullAbsolute != battery.fullAbsolute)
+            Global.batteryFullAbsolute  = battery.fullAbsolute
+        if (Global.batteryIsCharging   != battery.isCharging)
+            Global.batteryIsCharging    = battery.isCharging
+    }
 
     PlasmaCore.DataSource {
         id: pmSource
 
         engine: "powermanagement"
-        connectedSources: []
+        connectedSources: ["Battery"]
 
-        property int batteryPercent
-        property double batteryIsCharging
-        property double batteryNow
-        property double batteryRate
-        property double batteryFull
-        property string devicePath
+        property var battery: {
+            "nowFraction": 0.0,
+            "rateFraction": 0.0,
+            "nowAbsolute": 0,
+            "rateAbsolute": 0,
+            "fullAbsolute": 0,
+            "isCharging": false
+        }
+        property string devicePath: ""
         onDevicePathChanged: {
             if (devicePath) {
                 connectedSources = ["Battery", devicePath]
             } else {
-                connectedSources = []
+                connectedSources = ["Battery"]
             }
         }
         onDataChanged: {
-            if (data[devicePath]) {
-                batteryPercent = data[devicePath]["Percent"]
-                batteryNow = data[devicePath]["Energy"]
-                batteryRate = batteryNow / (data["Battery"]["Remaining msec"]/(3600*1000))
-                batteryFull = 100*batteryNow/batteryPercent
-                batteryIsCharging = data[devicePath]["State"] != "Discharging"
+            if (devicePath != "" && data[devicePath]) {
+                let remainingHours = data["Battery"]["Remaining msec"]/(3600*1000)
 
-                if (Global.batteryPercent != batteryPercent)
-                    Global.batteryPercent = batteryPercent
-                if (Global.batteryNow != batteryNow)
-                    Global.batteryNow = batteryNow
-                if (Global.batteryRate != batteryRate)
-                    Global.batteryRate = batteryRate
-                if (Global.batteryFull != batteryFull)
-                    Global.batteryFull = batteryFull
-                if (Global.batteryIsCharging != batteryIsCharging)
-                    Global.batteryIsCharging = batteryIsCharging
+                battery.nowFraction  = data[devicePath]["Percent"]*0.01
+                battery.rateFraction = battery.nowFraction / remainingHours
+                battery.nowAbsolute  = data[devicePath]["Energy"]
+                battery.rateAbsolute = battery.nowAbsolute / remainingHours
+                battery.fullAbsolute = battery.nowAbsolute / battery.nowFraction
+                battery.isCharging   = battery.nowFraction < 0.95 ? (data[devicePath]["State"] != "Discharging") : false
+                updateBattery(extrapolateBattery(truncateBattery(battery)))
+            } else if (devicePath == "" && connectedSources.size == 1) {
+                connectedSources.push(data["Battery"]["Sources"])
+            } else if (devicePath == "") {
+                dbusSource.interval = 1000
             }
         }
     }
@@ -85,21 +122,30 @@ Item {
         engine: "executable"
         connectedSources: []
         property var batteryCMDs: {}
+        property var battery: {
+            "nowFraction": 0.0,
+            "rateFraction": 0.0,
+            "nowAbsolute": 0,
+            "rateAbsolute": 0,
+            "fullAbsolute": 0,
+            "isCharging": false
+        }
 
         property int errorCount: 0
+        property string devicePath: ""
+        property int sourcesProcessed: 0
+
         readonly property int errorMax: 10
-        property string devicePath
         onDevicePathChanged: {
             if (devicePath) {
-                var dbusPrefix = 'qdbus --system org.freedesktop.UPower '
-                var dbusSuffix = ' org.freedesktop.UPower.Device.'
+                let dbusPath = 'qdbus --system org.freedesktop.UPower ' + devicePath + ' org.freedesktop.UPower.Device.'
 
                 batteryCMDs = {}
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Percentage'] = 'p_now'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'Energy'] = 'e_now'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyRate'] = 'e_rate'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'EnergyFull'] = 'e_full'
-                batteryCMDs[dbusPrefix + devicePath + dbusSuffix + 'State'] = 'b_state'
+                batteryCMDs[dbusPath + 'Percentage'] = 'p_now'
+                batteryCMDs[dbusPath + 'Energy'] = 'e_now'
+                batteryCMDs[dbusPath + 'EnergyRate'] = 'e_rate'
+                batteryCMDs[dbusPath + 'EnergyFull'] = 'e_full'
+                batteryCMDs[dbusPath + 'State'] = 'b_state'
 
                 connectedSources = []
                 var keys = Object.keys(batteryCMDs)
@@ -119,70 +165,45 @@ Item {
                 var tmp_var = parseFloat(data.stdout)
                 switch (batteryCMDs[sourceName]) {
                     case 'p_now':
-                        if (tmp_var > 0 && tmp_var <= 100)
-                            Global.batteryPercent = tmp_var
-                        if (Global.batteryFull > 0 && Math.round(100*Global.batteryNow/Global.batteryFull) != Global.batteryPercent) {
-                            if (Global.batteryFull > 0 && Global.batteryFull >= Global.batteryNow) {
-                                tmp_var = Global.batteryPercent*Global.batteryFull/100
-                                if (Global.batteryNow != tmp_var)
-                                    Global.batteryNow = tmp_var
-                            } else if (Global.batteryNow > 0 && Global.batteryPercent != 0) {
-                                tmp_var = 100*Global.batteryNow/Global.batteryPercent
-                                if (Global.batteryFull != tmp_var)
-                                    Global.batteryFull = tmp_var
-                            } else {
-                                if (Global.batteryNow != Global.batteryPercent)
-                                    Global.batteryNow = Global.batteryPercent
-                                if (Global.batteryFull != 100)
-                                    Global.batteryFull = 100
-                                console.log("Missing battery data, roughly extrapolated, but energy rate measurement will be invalid.")
-                            }
+                        if (tmp_var > 0 && tmp_var <= 100) {
+                            battery.nowFraction = tmp_var*0.01
                         }
                     break
                     case 'e_now':
                         if (tmp_var > 0) {
-                            if (Global.batteryNow != tmp_var)
-                                Global.batteryNow = tmp_var
-                            if (Global.batteryFull > 0 && Global.batteryIsCharging && Global.batteryNow/Global.batteryFull > 0.95)
-                                Global.batteryIsCharging = false
+                            battery.nowAbsolute = tmp_var
                         }
                     break
                     case 'e_rate':
-                        if (tmp_var > 0 && Global.batteryRate != tmp_var)
-                            Global.batteryRate = tmp_var
+                        if (tmp_var > 0) {
+                            battery.rateAbsolute = tmp_var
+                        }
                     break
                     case 'e_full':
-                        if (tmp_var != 0 && tmp_var > Global.batteryNow && Global.batteryFull != tmp_var) {
-                            Global.batteryFull = tmp_var
-                        } else if (Global.batteryNow > 0 && Global.batteryPercent > 0) {
-                            tmp_var = 100*Global.batteryNow/Global.batteryPercent
-                            Global.batteryFull = tmp_var
-                            console.log("Invalid battery capacity returned by UPower. Extrapolated.")
+                        if (tmp_var > battery.nowAbsolute) {
+                            battery.fullAbsolute = tmp_var
                         }
                     break
                     case 'b_state':
-                        if (tmp_var != 2 && Global.batteryFull > 0 && Global.batteryIsCharging && Global.batteryNow/Global.batteryFull > 0.95) {
-                            Global.batteryIsCharging = false
-                        } else if (tmp_var != 2) {
-                            if (!Global.batteryIsCharging)
-                                Global.batteryIsCharging = true
-                        } else if (Global.batteryIsCharging) {
-                            Global.batteryIsCharging = false
-                        }
+                        battery.isCharging = tmp_var != 2
                     break
                     default:
                     break
                 }
                 errorCount = 0
+                sourcesProcessed += 1
+                if (sourcesProcessed == connectedSources.length) {
+                    interval = Global.batteryUpdateInterval
+                    updateBattery(extrapolateBattery(truncateBattery(battery)))
+                    sourcesProcessed = 0
+                }
             } else {
                 if (errorCount >= errorMax) {
-                    if (!Global.batteryNow && Global.batteryNow != 2)
-                        Global.batteryNow = 2
-                    if (!Global.batteryRate && Global.batteryRate != 1)
-                        Global.batteryRate = 1
-                    if (!Global.batteryFull && Global.batteryFull != 4)
-                        Global.batteryFull = 4
-                    Global.batteryIsCharging = !Global.batteryIsCharging
+                    if (!battery.nowFraction)
+                        battery.nowFraction = 2
+                    if (!battery.rateFraction)
+                        battery.rateFraction = 1
+                    battery.isCharging = !battery.isCharging
                 } else {
                     errorCount += 1
                 }

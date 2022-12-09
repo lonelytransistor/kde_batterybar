@@ -111,7 +111,7 @@ Kirigami.FormLayout {
     QQC1.SpinBox {
         id: batteryUpdateIntervalSpinBox
 
-        Kirigami.FormData.label: i18nc("@label:spinbox", "Update battery info interval (dBus sources only):")
+        Kirigami.FormData.label: i18nc("@label:spinbox", "Update rate data interval (dBus sources only):")
 
         decimals: 1
         stepSize: 0.1
@@ -119,6 +119,6 @@ Kirigami.FormLayout {
         suffix: i18ncp("@item:valuesuffix spacing to number + unit (seconds)", " second", " seconds")
     }
     QQC2.Label {
-        text: "There are two types of sources for battery data: dBus and PM:\n- Data from dBus is obtained periodically, so it may not be accurate\n  in regards to the current situation and it may draw more energy\n  due to cyclical calls to qdbus.\n  However this source may reveal additional batteries or more data.\n- Data from PM is obtained instantaneously and does not require polling.\n  However it may provide less precise data for discharge rate."
+        text: "There are two types of sources for battery data: dBus and PM:\n- Discharge/charge rate obtained from a dBus source is refreshed periodically\n  and as such it may draw more energy. However rate data itself is more\n  precise in terms of value. If interval is equal to 0, data is only refreshed\n  when battery charge changes.\n- Data from PM is obtained instantaneously and does not require polling.\n  However it may provide less precise data for discharge rate."
     }
 }

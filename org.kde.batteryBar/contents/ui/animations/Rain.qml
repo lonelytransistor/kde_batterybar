@@ -29,7 +29,7 @@ Rectangle {
         id: particleSystem
     }
     ImageParticle {
-        source: "tail.png"
+        source: "raindrop.png"
         system: particleSystem
         groups: ['tail']
     }

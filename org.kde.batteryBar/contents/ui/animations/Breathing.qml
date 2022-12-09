@@ -25,7 +25,7 @@ Rectangle {
     opacity: 0.0
 
     SequentialAnimation {
-        running: Global.batteryIsCharging
+        running: root.visible
         loops: Animation.Infinite
         PauseAnimation {
             duration: Global.breatheDelay

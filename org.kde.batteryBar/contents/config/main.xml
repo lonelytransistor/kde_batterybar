@@ -7,7 +7,7 @@
 
     <group name="SourceSettings">
         <entry name="batteryUpdateInterval" type="Double">
-            <default>5.0</default>
+            <default>30.0</default>
         </entry>
         <entry name="devicePath" type="String">
             <default>dBus:/null</default>
@@ -108,7 +108,7 @@
     </group>
     <group name="MiscSettings">
         <entry name="dimensionsUpdateInterval" type="Double">
-            <default>0.5</default>
+            <default>3.0</default>
         </entry>
         <entry name="chargeBarValueOffset" type="Int">
             <default>0</default>

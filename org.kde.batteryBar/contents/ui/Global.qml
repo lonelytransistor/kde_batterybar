@@ -60,10 +60,11 @@ QtObject {
     property bool editMode: true
 
     // Battery
-    property double batteryPercent: 25
-    property double batteryNow: 1
-    property double batteryRate: 2
-    property double batteryFull: 4
+    property double batteryNowFraction: 0.25
+    property double batteryRateFraction: 0.50
+    property double batteryNowAbsolute: 1
+    property double batteryRateAbsolute: 2
+    property double batteryFullAbsolute: 4
     property bool batteryIsCharging: false
 
     // Size

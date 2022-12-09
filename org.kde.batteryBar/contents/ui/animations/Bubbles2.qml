@@ -49,13 +49,13 @@ Rectangle {
             leftMargin: -100
         }
         enabled: false
-        maximumEmitted: 6
+        maximumEmitted: 10
         width: 1
         system: particleSystem
-        emitRate: velocity.magnitude/100
+        emitRate: velocity.magnitude/50
         lifeSpan: 4000*Global.maxLen/velocity.magnitude
-        size: parent.height/3
-        sizeVariation: size*0.9
+        size: parent.height/2
+        sizeVariation: size*0.4
         velocity: AngleDirection {
             angle: 0
             magnitude: 1000
