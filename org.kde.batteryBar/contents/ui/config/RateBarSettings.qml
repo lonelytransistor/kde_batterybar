@@ -45,7 +45,8 @@ Kirigami.FormLayout {
     property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
     
     QQC2.Label {
-        text: "Rate bar shows how much battery will\ndischarge or charge during the next " + cfg_rateBarRescale + "h."
+        Kirigami.FormData.label: "Rate bar shows how much battery will\n"
+        text: "discharge or charge during the next " + cfg_rateBarRescale + "h.\n"
     }
     KQuickControls.ColorButton {
         id: rateBarColorPicker
