@@ -24,9 +24,9 @@ import "bars"
 import "animations"
 
 MainContainer {
-    id: root
+    id: rootItem
 
-    GlobalLoader {}
+    property var global: Global {}
     Battery {}
     ChargeBar {
         id: chargeBar
@@ -40,7 +40,7 @@ MainContainer {
         anchors.bottom: rateBar.bottom
         anchors.left:   chargeBar.left
         anchors.right:  chargeBar.right
-        clip: !Global.batteryIsCharging
+        clip: !rootItem.global.batteryIsCharging
         color: "transparent"
 
         Repeater {
@@ -49,8 +49,8 @@ MainContainer {
                 anchors.top    : rateBarSegments.top
                 anchors.bottom : rateBarSegments.bottom
 
-                color: Global.rateBarSegmentsColor
-                opacity: Global.rateBarSegmentsOpacity
+                color: rootItem.global.rateBarSegmentsColor
+                opacity: rootItem.global.rateBarSegmentsOpacity
 
                 x: (rateBar.x - chargeBar.x) + rateBar.width * (rateBar.flip ? -1-index : 2+index)
                 width: 4
@@ -76,12 +76,12 @@ MainContainer {
     transform: [
         Rotation {
             origin { x: 0; y: 0 }
-            angle: Global.isVertical ? -90 : 0
+            angle: rootItem.global.isVertical ? -90 : 0
         },
         Rotation {
             origin { x: 0; y: 0 }
             axis { x: 1; y: 0; z: 0 }
-            angle: Global.isVertical ? 180 : 0
+            angle: rootItem.global.isVertical ? 180 : 0
         }
     ]
 }

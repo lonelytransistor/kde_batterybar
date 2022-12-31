@@ -43,7 +43,46 @@ Kirigami.FormLayout {
     property alias cfg_rateBarRescale: rateBarRescaleSpinBox.value
 
     property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
-    
+    property var alignment: plasmoid.rootItem.global.getAlignment(isVertical)
+    function findIndex(key) {
+        return plasmoid.rootItem.global.findAlignment(key)
+    }
+
+    QQC2.Label {
+        Kirigami.FormData.label: "Rate segments show how much battery will\n"
+        text: "discharge or charge after multiples of " + cfg_rateBarRescale + "h.\n"
+    }
+    KQuickControls.ColorButton {
+        id: rateBarSegmentsColorPicker
+        Kirigami.FormData.label: i18n("Rate segments color:")
+        enabled: true
+    }
+    QQC1.SpinBox {
+        id: rateBarSegmentsOpacitySpinBox
+
+        Kirigami.FormData.label: i18n("Rate segments opacity:")
+
+        decimals: 0
+        stepSize: 1
+        minimumValue: 0
+        maximumValue: 255
+        onValueChanged: rateBarSegmentsOpacitySlider.value = value
+    }
+    QQC1.Slider {
+        id: rateBarSegmentsOpacitySlider
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: 32
+        anchors.rightMargin: 32
+
+        stepSize: rateBarSegmentsOpacitySpinBox.stepSize
+        minimumValue: rateBarSegmentsOpacitySpinBox.minimumValue
+        maximumValue: rateBarSegmentsOpacitySpinBox.maximumValue
+        updateValueWhileDragging: true
+        value: rateBarSegmentsOpacitySpinBox.value
+        onValueChanged: rateBarSegmentsOpacitySpinBox.value = value
+    }
     QQC2.Label {
         Kirigami.FormData.label: "Rate bar shows how much battery will\n"
         text: "discharge or charge during the next " + cfg_rateBarRescale + "h.\n"
@@ -110,49 +149,18 @@ Kirigami.FormLayout {
         value: rateBarChargingOpacitySpinBox.value
         onValueChanged: rateBarChargingOpacitySpinBox.value = value
     }
-    KQuickControls.ColorButton {
-        id: rateBarSegmentsColorPicker
-        Kirigami.FormData.label: i18n("Rate segments color:")
-        enabled: true
-    }
-    QQC1.SpinBox {
-        id: rateBarSegmentsOpacitySpinBox
-
-        Kirigami.FormData.label: i18n("Rate segments opacity:")
-
-        decimals: 0
-        stepSize: 1
-        minimumValue: 0
-        maximumValue: 255
-        onValueChanged: rateBarSegmentsOpacitySlider.value = value
-    }
-    QQC1.Slider {
-        id: rateBarSegmentsOpacitySlider
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.leftMargin: 32
-        anchors.rightMargin: 32
-
-        stepSize: rateBarSegmentsOpacitySpinBox.stepSize
-        minimumValue: rateBarSegmentsOpacitySpinBox.minimumValue
-        maximumValue: rateBarSegmentsOpacitySpinBox.maximumValue
-        updateValueWhileDragging: true
-        value: rateBarSegmentsOpacitySpinBox.value
-        onValueChanged: rateBarSegmentsOpacitySpinBox.value = value
-    }
     QQC2.ComboBox {
         id: rateBarAlignComboBox
 
         Kirigami.FormData.label: i18n("Rate bar alignment:")
 
-        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        model: parent.alignment
         textRole: "label"
         property string value
-        currentIndex: Global.alignmentArray[value][0]
+        currentIndex: findIndex(value, model)
         onActivated: {
-            cfg_rateBarAlign = model.get(currentIndex).align
-            value = cfg_rateBarChargingAlign.align
+            value = model[currentIndex].align
+            cfg_rateBarAlign = value
         }
     }
     QQC2.ComboBox {
@@ -160,13 +168,13 @@ Kirigami.FormLayout {
 
         Kirigami.FormData.label: i18n("Rate bar alignment when charging:")
 
-        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        model: parent.alignment
         textRole: "label"
         property string value
-        currentIndex: Global.alignmentArray[value][0]
+        currentIndex: findIndex(value, model)
         onActivated: {
-            cfg_rateBarChargingAlign = model.get(currentIndex).align
-            value = cfg_rateBarChargingAlign.align
+            value = model[currentIndex].align
+            cfg_rateBarChargingAlign = value
         }
     }
     QQC1.SpinBox {

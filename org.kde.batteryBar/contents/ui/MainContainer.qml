@@ -29,22 +29,22 @@ Item {
     property var containmentInterface: null
     property var appletInterface: null
     readonly property bool pEditMode: containmentInterface ? containmentInterface.editMode : false
-    readonly property int normalModeSize: Global.normalModeSize
+    readonly property int normalModeSize: rootItem.global.normalModeSize
     onParentChanged: updateParent()
     onPEditModeChanged: updateDimensions()
     onNormalModeSizeChanged: updateDimensions()
 
     function _updateAppletSize() {
-        let size = Global.editMode ? Global.editModeSize : normalModeSize
+        let size = rootItem.global.editMode ? rootItem.global.editModeSize : normalModeSize
         var gpoint = root.appletInterface.mapToItem(root.containmentInterface, 0, 0)
 
-        if (Global.isVertical) {
+        if (rootItem.global.isVertical) {
             if (root.height == size) {
                 updateDimensionsRetry.running = false
                 console.log("Applet size updated.")
                 return
             }
-            Global.maxLen = root.containmentInterface.height - gpoint.y
+            rootItem.global.maxLen = root.containmentInterface.height - gpoint.y
             root.Layout.preferredHeight = size
             root.Layout.maximumHeight = size
             root.Layout.minimumHeight = size
@@ -61,7 +61,7 @@ Item {
                 console.log("Applet size updated.")
                 return
             }
-            Global.maxLen = root.containmentInterface.width - gpoint.x
+            rootItem.global.maxLen = root.containmentInterface.width - gpoint.x
             root.Layout.preferredWidth = size
             root.Layout.maximumWidth = size
             root.Layout.minimumWidth = size
@@ -75,18 +75,18 @@ Item {
         }
     }
     function _updateDimensions() {
-        let size = Global.editMode ? Global.editModeSize : normalModeSize
+        let size = rootItem.global.editMode ? rootItem.global.editModeSize : normalModeSize
 
-        Global.containerWidth = root.containmentInterface.width
-        Global.containerHeight = root.containmentInterface.height
+        rootItem.global.containerWidth = root.containmentInterface.width
+        rootItem.global.containerHeight = root.containmentInterface.height
         if (root.appletInterface.width > size) {
-            Global.appletWidth = root.appletInterface.width
+            rootItem.global.appletWidth = root.appletInterface.width
         }
         if (root.appletInterface.height > size) {
-            Global.appletHeight = root.appletInterface.height
+            rootItem.global.appletHeight = root.appletInterface.height
         }
-        if (Global.editMode != root.pEditMode) {
-            Global.editMode = root.pEditMode
+        if (rootItem.global.editMode != root.pEditMode) {
+            rootItem.global.editMode = root.pEditMode
             updateAppletSize()
         }
     }
@@ -140,7 +140,7 @@ Item {
     }
     Timer {
         id: updateDimensionsCyclical
-        interval: Global.dimensionsUpdateInterval
+        interval: rootItem.global.dimensionsUpdateInterval
         running: true
         repeat: true
         onTriggered: updateDimensions()
@@ -149,6 +149,6 @@ Item {
         id: editIcon
         anchors.fill: parent
         source: "icon.svg"
-        visible: Global.editMode
+        visible: rootItem.global.editMode
     }
 }

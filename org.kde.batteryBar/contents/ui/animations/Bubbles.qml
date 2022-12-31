@@ -14,131 +14,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
-import QtQuick 2.2
-import QtGraphicalEffects 1.0
+import QtQuick 2.15
+import QtQuick.Particles 2.15
 import ".."
 
 Rectangle {
     id: root
     anchors.fill: parent
     color: "transparent"
-    opacity: Global.batteryIsCharging ? 0.0 : 0.75
-    visible: Global.bubblesVisible
-    readonly property var speed: [1.5, 1.8, 0.7, 1.2, 1.4, 0.6, 1.0, 0.8, 1.2, 0.9, 0.8, 1.2, 1.1].map(function(x) { return x*1.5*Global.maxLen })
+    opacity: 0.75
 
-    Item {
-        x: (Global.batteryIsCharging ? -200 : Global.maxLen+200)
-        y: 0
-        height: parent.height
-        width: parent.width
-
-        Behavior on x {
-            NumberAnimation {
-                duration: root.speed[0]
-                easing.type: Easing.InOutQuad
-            }
-        }
-        Behavior on y {
-            NumberAnimation {
-                duration: root.speed[0]
-                easing.type: Easing.InOutQuad
-            }
-        }
-        Bubble {
-            speed: root.speed[1]
-
-            x: parent.children[1].width*6
-            y: (root.charging ? parent.height/2-height/2 : parent.height/2-height/4)
-            width: parent.height/2
-        }
-        Bubble {
-            speed: root.speed[2]
-
-            x: parent.children[2].width*2
-            y: (root.charging ? height : parent.height/2)
-            width: parent.height/4
-        }
-        Bubble {
-            speed: root.speed[3]
-
-            y: (root.charging ? parent.height-height : 0)
-            width: parent.height/8
-        }
+    Component.onCompleted: emitter.pulse(1000)
+    ParticleSystem {
+        id: particleSystem
+        onEmptyChanged: if (empty) root.parent.ended()
     }
-    Item {
-        x: (Global.batteryIsCharging ? -200 : Global.maxLen+200)
-        y: 0
-        height: parent.height
-        width: parent.width
-
-        Behavior on x {
-            NumberAnimation {
-                duration: root.speed[4]
-                easing.type: Easing.InOutQuad
-            }
-        }
-        Behavior on y {
-            NumberAnimation {
-                duration: root.speed[4]
-                easing.type: Easing.InOutQuad
-            }
-        }
-        Bubble {
-            speed: root.speed[5]
-
-            y: (root.charging ? height : height/4)
-            width: parent.height/3
-        }
-        Bubble {
-            speed: root.speed[6]
-
-            x: parent.children[0].width*3
-            y: (root.charging ? height/2 : height*2)
-            width: parent.height/4
-        }
-        Bubble {
-            speed: root.speed[7]
-
-            y: (root.charging ? height/3 : parent.height-2*height/3)
-            width: parent.height/6
-        }
+    ImageParticle {
+        source: "bubble.png"
+        system: particleSystem
     }
-    Item {
-        x: (Global.batteryIsCharging ? -200-Global.maxLen*0.5 : Global.maxLen+200)
-        y: 0
-        height: parent.height
-        width: parent.width
-
-        Behavior on x {
-            NumberAnimation {
-                duration: root.speed[8]
-                easing.type: Easing.InOutQuad
-            }
+    Emitter {
+        id: emitter
+        anchors {
+            top: parent.top
+            left: parent.left
+            bottom: parent.bottom
+            leftMargin: -100
         }
-        Behavior on y {
-            NumberAnimation {
-                duration: root.speed[8]
-                easing.type: Easing.InOutQuad
-            }
-        }
-        Bubble {
-            speed: root.speed[9]
-
-            y: (root.charging ? height : height/3)
-            width: parent.height/3
-        }
-        Bubble {
-            speed: root.speed[10]
-
-            x: parent.children[0].width*3
-            y: (root.charging ? height/2 : height*2)
-            width: parent.height/4
-        }
-        Bubble {
-            speed: root.speed[11]
-
-            y: (root.charging ? height/3 : parent.height-2*height/3)
-            width: parent.height/4
+        enabled: false
+        maximumEmitted: 10
+        width: 1
+        system: particleSystem
+        emitRate: velocity.magnitude/50
+        lifeSpan: 2000
+        size: parent.height/2
+        sizeVariation: size*0.4
+        velocity: AngleDirection {
+            angle: 0
+            magnitude: 1000
+            magnitudeVariation: magnitude/10
         }
     }
 }

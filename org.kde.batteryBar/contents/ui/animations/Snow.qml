@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
-import QtQuick 2.5
-import QtQuick.Particles 2.0
+import QtQuick 2.15
+import QtQuick.Particles 2.15
 import ".."
 
 Rectangle {
@@ -23,16 +23,17 @@ Rectangle {
     anchors.fill: parent
     color: "transparent"
     opacity: 0.7
-    visible: Global.snowVisible
 
     ParticleSystem {
         id: particleSystem
+        onEmptyChanged: if (empty) root.parent.ended()
     }
     ImageParticle {
         source: "snowflake.png"
         system: particleSystem
     }
     Emitter {
+        id: emitter
         anchors {
             top: parent.top
             left: parent.left
@@ -42,12 +43,10 @@ Rectangle {
         }
         height: 1
         system: particleSystem
-        emitRate: 40
-        lifeSpan: 6400
-        lifeSpanVariation: 400
+        emitRate: rootItem.global.snowVisible ? 40 : 0
+        lifeSpan: rootItem.global.snowVisible ? 6400 : 0
         size: 8
         sizeVariation: 6
-        enabled: Global.snowVisible
         velocity: AngleDirection {
             angle: 70
             angleVariation: 20

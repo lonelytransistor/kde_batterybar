@@ -20,12 +20,12 @@ import ".."
 Bar {
     id: root
 
-    align:          Global.batteryIsCharging ? Global.chargeBarChargingAlign : Global.chargeBarAlign
-    offset:         Global.chargeBarOffset
-    margin:         Global.chargeBarMargin
-    width:         (Global.chargeBarValueOffset + Global.batteryNowAbsolute) * Global.maxLen / Global.batteryFullAbsolute - Global.chargeBarOffset
-    height:         Global.chargeBarHeight
+    align:          rootItem.global.batteryIsCharging ? rootItem.global.chargeBarChargingAlign : rootItem.global.chargeBarAlign
+    offset:         rootItem.global.chargeBarOffset
+    margin:         rootItem.global.chargeBarMargin
+    length:        (rootItem.global.chargeBarValueOffset + rootItem.global.batteryNowAbsolute) * (rootItem.global.maxLen - offset) / rootItem.global.batteryFullAbsolute
+    thickness:      rootItem.global.chargeBarHeight
 
-    opacity:        Global.batteryIsCharging ? Global.chargeBarChargingOpacity : Global.chargeBarOpacity
-    color:          Global.batteryIsCharging ? Global.chargeBarChargingColor : Global.chargeBarColor
+    opacity:        rootItem.global.batteryIsCharging ? rootItem.global.chargeBarChargingOpacity : rootItem.global.chargeBarOpacity
+    color:          rootItem.global.batteryIsCharging ? rootItem.global.chargeBarChargingColor : rootItem.global.chargeBarColor
 }

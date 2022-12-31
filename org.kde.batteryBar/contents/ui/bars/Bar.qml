@@ -21,59 +21,54 @@ import ".."
 Rectangle {
     id: root
 
-    property string align
     property int margin
     property int offset
-    property bool flip
+    property string align
 
-    onMarginChanged: updateAnchors()
-    onOffsetChanged: updateAnchors()
-    onAlignChanged: updateAnchors()
-    function _updateAnchors(data, f = false) {
-        anchors.top    = data.top    ? parent.top    : undefined
-        anchors.bottom = data.bottom ? parent.bottom : undefined
-        anchors.left   = data.left   ? parent.left   : undefined
-        anchors.right  = data.right  ? parent.right  : undefined
+    property int thickness
+    property int length
 
-        anchors.topMargin    = data.top    ? margin : 0
-        anchors.bottomMargin = data.bottom ? margin : 0
-        anchors.leftMargin   = data.left   ? margin : 0
-        anchors.rightMargin  = data.right  ? margin : 0
+    readonly property bool vertical: rootItem.global.isVertical
+    readonly property int parentThickness: rootItem.global.isVertical ? parent.width : parent.height
 
-        flip = f
-    }
-    function updateAnchors() {
-        if (Global.isVertical) {
-            if (align == "bottom-left") {
-                _updateAnchors({top: 1})
-            } else if (align == "bottom-right") {
-                _updateAnchors({top: 1}, true)
-            } else if (align == "top-left") {
-                _updateAnchors({bottom: 1})
-            } else if (align == "top-right") {
-                _updateAnchors({bottom: 1}, true)
-            } else if (align == "fill-left" || align == "fill-top") {
-                _updateAnchors({top: 1, bottom: 1})
-            } else if (align == "fill-right" || align == "fill-bottom") {
-                _updateAnchors({top: 1, bottom: 1}, true)
-            }
-        } else {
-            if (align == "top-left") {
-                _updateAnchors({top: 1})
-            } else if (align == "top-right") {
-                _updateAnchors({top: 1}, true)
-            } else if (align == "bottom-left") {
-                _updateAnchors({bottom: 1})
-            } else if (align == "bottom-right") {
-                _updateAnchors({bottom: 1}, true)
-            } else if (align == "fill-left" || align == "fill-top") {
-                _updateAnchors({top: 1, bottom: 1})
-            } else if (align == "fill-right" || align == "fill-bottom") {
-                _updateAnchors({top: 1, bottom: 1}, true)
-            }
+    onMarginChanged: update()
+    onOffsetChanged: update()
+    onAlignChanged: update()
+    onThicknessChanged: update()
+    onLengthChanged: update()
+    function update() {
+        if ((!vertical && align == "bottom-left") || (vertical && align == "top-right")) {
+            x = offset
+            y = parentThickness - thickness - margin
+            width = length
+            height = thickness
+        } else if ((!vertical && align == "bottom-right") || (vertical && align == "bottom-right")) {
+            x = rootItem.global.maxLen - length
+            y = parentThickness - thickness - margin
+            width = length
+            height = thickness
+        } else if ((!vertical && align == "top-left") || (vertical && align == "top-left")) {
+            x = offset
+            y = margin
+            width = length
+            height = thickness
+        } else if ((!vertical && align == "top-right") || (vertical && align == "bottom-left")) {
+            x = rootItem.global.maxLen - length
+            y = margin
+            width = length
+            height = thickness
+        } else if ((align == "fill-left") || (align == "fill-top")) {
+            x = offset
+            y = margin
+            width = length
+            height = parentThickness - 2*margin
+        } else if ((align == "fill-right") || (align == "fill-bottom")) {
+            x = rootItem.global.maxLen - length
+            y = margin
+            width = length
+            height = parentThickness - 2*margin
         }
     }
-    x: flip ? Global.maxLen-offset-width : offset
 
     Behavior on y {
         NumberAnimation {

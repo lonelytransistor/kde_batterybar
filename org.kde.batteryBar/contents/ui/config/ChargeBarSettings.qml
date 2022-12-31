@@ -40,7 +40,11 @@ Kirigami.FormLayout {
     property alias cfg_chargeBarMargin: chargeBarMarginSpinBox.value
 
     property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
-    
+    property var alignment: plasmoid.rootItem.global.getAlignment(isVertical)
+    function findIndex(key) {
+        return plasmoid.rootItem.global.findAlignment(key)
+    }
+
     QQC2.Label {
         Kirigami.FormData.label: i18n("Charge bar shows the current\n")
         text: "battery charge and state.\n"
@@ -112,12 +116,12 @@ Kirigami.FormLayout {
 
         Kirigami.FormData.label: i18n("Charge bar alignment:")
 
-        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        model: parent.alignment
         textRole: "label"
         property string value
-        currentIndex: Global.alignmentArray[value][0]
+        currentIndex: findIndex(value)
         onActivated: {
-            value = model.get(currentIndex).align
+            value = model[currentIndex].align
             cfg_chargeBarAlign = value
         }
     }
@@ -126,12 +130,12 @@ Kirigami.FormLayout {
 
         Kirigami.FormData.label: i18n("Charge bar alignment when charging:")
 
-        model: parent.isVertical ? Global.modelVertical : Global.modelHorizontal
+        model: parent.alignment
         textRole: "label"
         property string value
-        currentIndex: Global.alignmentArray[value][0]
+        currentIndex: findIndex(value)
         onActivated: {
-            value = model.get(currentIndex).align
+            value = model[currentIndex].align
             cfg_chargeBarChargingAlign = value
         }
     }

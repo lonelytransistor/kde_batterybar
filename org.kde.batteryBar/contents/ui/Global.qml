@@ -14,44 +14,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
-pragma Singleton
 import QtQuick 2.2
+import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 
-QtObject {
-    id: root
+Item {
+    id: global
 
-    // Settings
-    property var alignmentArray: {
-        "top-left":     [0, "Top-left",                "all"],
-        "top-right":    [1, "Top-right",               "all"],
-        "bottom-left":  [2, "Bottom-left",             "all"],
-        "bottom-right": [3, "Bottom-right",            "all"],
-        "fill-top":     [4, "Top, fill left-right",    "vertical"],
-        "fill-bottom":  [5, "Bottom, fill left-right", "vertical"],
-        "fill-left":    [4, "Left, fill top-bottom",   "horizontal"],
-        "fill-right":   [5, "Right, fill top-bottom",  "horizontal"]
-    }
-    property var modelVertical: ListModel {}
-    property var modelHorizontal: ListModel {}
-    onAlignmentArrayChanged: {
-        updateModel(modelVertical,   ["all", "vertical"])
-        updateModel(modelHorizontal, ["all", "horizontal"])
-    }
-    function updateModel(model, types) {
-        model.clear()
-        for (const [key, value] of Object.entries(alignmentArray)) {
-            if (types.includes(value[2])) {
-                model.append({
-                    "label": value[1],
-                    "align": key
-                })
-            }
+    property var getAlignment: function (vertical) {
+        if (vertical) {
+            return [{"label": "Top-left", "align": "top-left"},
+                    {"label": "Top-right", "align": "top-right"},
+                    {"label": "Bottom-left", "align": "bottom-left"},
+                    {"label": "Bottom-right", "align": "bottom-right"},
+                    {"label": "Top, fill left-right", "align": "fill-top"},
+                    {"label": "Bottom, fill left-right", "align": "fill-bottom"}]
+        } else {
+            return [{"label": "Top-left", "align": "top-left"},
+                    {"label": "Top-right", "align": "top-right"},
+                    {"label": "Bottom-left", "align": "bottom-left"},
+                    {"label": "Bottom-right", "align": "bottom-right"},
+                    {"label": "Left, fill top-bottom", "align": "fill-left"},
+                    {"label": "Right, fill top-bottom", "align": "fill-right"}]
         }
+    }
+    property var findAlignment: function (key) {
+        var model = getAlignment(true)
+        for (var ix = 0; ix < model.length; ix++) {
+            if (model[ix].align == key)
+                return ix
+        }
+        model = getAlignment(false)
+        for (var ix = 0; ix < model.length; ix++) {
+            if (model[ix].align == key)
+                return ix
+        }
+        return 0
     }
 
     // Info
-    property bool isVertical
-    property bool isPlanar
+    property bool isVertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
+    property bool isPlanar: (plasmoid.formFactor == PlasmaCore.Types.Planar)
     property int containerWidth: 1
     property int containerHeight: 1
     property int appletWidth: 1
@@ -68,49 +71,49 @@ QtObject {
     property bool batteryIsCharging: false
 
     // Size
-    property int editModeSize: 32
+    property int editModeSize: Math.max(parent ? parent.width : 32, parent ? parent.height : 32)
 
     // Animations
-    property bool animationsVisible
-    property bool snowVisible
-    property bool rainVisible
-    property bool boltVisible
-    property bool bubblesVisible
-    property bool breatheVisible
-    property int breatheDuration
-    property int breatheDelay
+    property bool animationsVisible: plasmoid.configuration.animationsVisible
+    property bool rainVisible: plasmoid.configuration.rainVisible
+    property bool snowVisible: plasmoid.configuration.snowVisible
+    property bool boltVisible: plasmoid.configuration.boltVisible
+    property bool bubblesVisible: plasmoid.configuration.bubblesVisible
+    property bool breatheVisible: plasmoid.configuration.breatheVisible
+    property int breatheDuration: plasmoid.configuration.breatheDuration*1000
+    property int breatheDelay: plasmoid.configuration.breatheDelay*1000
     property double breatheOpacity: 0.2
 
     // Charge bar
-    property string chargeBarAlign
-    property string chargeBarChargingAlign
-    property color chargeBarColor
-    property double chargeBarOpacity
-    property color chargeBarChargingColor
-    property double chargeBarChargingOpacity
-    property int chargeBarOffset
-    property int chargeBarHeight
-    property int chargeBarMargin
+    property string chargeBarAlign: plasmoid.configuration.chargeBarAlign
+    property string chargeBarChargingAlign: plasmoid.configuration.chargeBarChargingAlign
+    property color chargeBarColor: plasmoid.configuration.chargeBarColor
+    property double chargeBarOpacity: plasmoid.configuration.chargeBarOpacity/255
+    property color chargeBarChargingColor: plasmoid.configuration.chargeBarChargingColor
+    property double chargeBarChargingOpacity: plasmoid.configuration.chargeBarChargingOpacity/255
+    property int chargeBarOffset: plasmoid.configuration.chargeBarOffset
+    property int chargeBarHeight: plasmoid.configuration.chargeBarHeight
+    property int chargeBarMargin: plasmoid.configuration.chargeBarMargin
 
     // Rate bar
-    property string rateBarAlign
-    property string rateBarChargingAlign
-    property color rateBarColor
-    property double rateBarOpacity
-    property color rateBarChargingColor
-    property double rateBarChargingOpacity
-    property color rateBarSegmentsColor
-    property double rateBarSegmentsOpacity
-    property int rateBarOffset
-    property int rateBarHeight
-    property int rateBarMargin
-    property double rateBarRescale
+    property string rateBarAlign: plasmoid.configuration.rateBarAlign
+    property string rateBarChargingAlign: plasmoid.configuration.rateBarChargingAlign
+    property color rateBarColor: plasmoid.configuration.rateBarColor
+    property double rateBarOpacity: plasmoid.configuration.rateBarOpacity/255
+    property color rateBarChargingColor: plasmoid.configuration.rateBarChargingColor
+    property double rateBarChargingOpacity: plasmoid.configuration.rateBarChargingOpacity/255
+    property color rateBarSegmentsColor: plasmoid.configuration.rateBarSegmentsColor
+    property double rateBarSegmentsOpacity: plasmoid.configuration.rateBarSegmentsOpacity/255
+    property int rateBarOffset: plasmoid.configuration.rateBarOffset
+    property int rateBarHeight: plasmoid.configuration.rateBarHeight
+    property int rateBarMargin: plasmoid.configuration.rateBarMargin
+    property double rateBarRescale: plasmoid.configuration.rateBarRescale
 
     // Others
-    property int batteryUpdateInterval
-    property int dimensionsUpdateInterval
-    property int chargeBarValueOffset
-    property int rateBarValueOffset
-    property int normalModeSize
-    property string devicePath
+    property int batteryUpdateInterval: plasmoid.configuration.batteryUpdateInterval*1000
+    property int dimensionsUpdateInterval: plasmoid.configuration.dimensionsUpdateInterval*1000
+    property int chargeBarValueOffset: plasmoid.configuration.chargeBarValueOffset
+    property int rateBarValueOffset: plasmoid.configuration.rateBarValueOffset
+    property int normalModeSize: plasmoid.configuration.normalModeSize
+    property string devicePath: plasmoid.configuration.devicePath
 }

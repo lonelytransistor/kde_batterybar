@@ -21,33 +21,34 @@ Rectangle {
     id: root
     anchors.fill: parent
     color: "#FFFFFF"
-    visible: Global.batteryIsCharging && Global.breatheVisible
+    visible: rootItem.global.batteryIsCharging && rootItem.global.breatheVisible
     opacity: 0.0
 
     SequentialAnimation {
         running: root.visible
         loops: Animation.Infinite
+        alwaysRunToEnd: true
         PauseAnimation {
-            duration: Global.breatheDelay
+            duration: rootItem.global.breatheDelay
         }
         PropertyAnimation {
             target: root
             property: "opacity"
 
             from: 0.0
-            to: Global.breatheOpacity
+            to: rootItem.global.breatheOpacity
 
-            duration: Global.breatheDuration
+            duration: rootItem.global.breatheDuration
             easing.type: Easing.InOutQuad
         }
         PropertyAnimation {
             target: root
             property: "opacity"
 
-            from: Global.breatheOpacity
+            from: rootItem.global.breatheOpacity
             to: 0.0
 
-            duration: Global.breatheDuration
+            duration: rootItem.global.breatheDuration
             easing.type: Easing.InOutQuad
         }
     }

@@ -1,3 +1,0 @@
-module BatteryBar
-
-singleton Global 1.0 Global.qml

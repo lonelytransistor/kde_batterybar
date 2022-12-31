@@ -20,7 +20,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 Item {
     id: root
 
-    property string devicePath: Global.devicePath
+    property string devicePath: rootItem.global.devicePath
     onDevicePathChanged: updateSources()
     onParentChanged: updateSources()
     function updateSources() {
@@ -63,18 +63,18 @@ Item {
         return battery
     }
     function updateBattery(battery) {
-        if (Global.batteryNowFraction  != battery.nowFraction)
-            Global.batteryNowFraction   = battery.nowFraction
-        if (Global.batteryRateFraction != battery.rateFraction)
-            Global.batteryRateFraction  = battery.rateFraction
-        if (Global.batteryNowAbsolute  != battery.nowAbsolute)
-            Global.batteryNowAbsolute   = battery.nowAbsolute
-        if (Global.batteryRateAbsolute != battery.rateAbsolute)
-            Global.batteryRateAbsolute  = battery.rateAbsolute
-        if (Global.batteryFullAbsolute != battery.fullAbsolute)
-            Global.batteryFullAbsolute  = battery.fullAbsolute
-        if (Global.batteryIsCharging   != battery.isCharging)
-            Global.batteryIsCharging    = battery.isCharging
+        if (rootItem.global.batteryNowFraction  != battery.nowFraction)
+            rootItem.global.batteryNowFraction   = battery.nowFraction
+        if (rootItem.global.batteryRateFraction != battery.rateFraction)
+            rootItem.global.batteryRateFraction  = battery.rateFraction
+        if (rootItem.global.batteryNowAbsolute  != battery.nowAbsolute)
+            rootItem.global.batteryNowAbsolute   = battery.nowAbsolute
+        if (rootItem.global.batteryRateAbsolute != battery.rateAbsolute)
+            rootItem.global.batteryRateAbsolute  = battery.rateAbsolute
+        if (rootItem.global.batteryFullAbsolute != battery.fullAbsolute)
+            rootItem.global.batteryFullAbsolute  = battery.fullAbsolute
+        if (rootItem.global.batteryIsCharging   != battery.isCharging)
+            rootItem.global.batteryIsCharging    = battery.isCharging
     }
 
     PlasmaCore.DataSource {
@@ -101,14 +101,16 @@ Item {
         }
         onDataChanged: {
             if (devicePath != "" && data[devicePath]) {
-                let remainingHours = data["Battery"]["Remaining msec"]/(3600*1000)
+                let remainingHours = Math.max(0, (data["Battery"]["Remaining msec"] & 0xFFFFFF)/(3600*1000))
 
                 battery.nowFraction  = data[devicePath]["Percent"]*0.01
                 battery.rateFraction = battery.nowFraction / remainingHours
-                battery.nowAbsolute  = data[devicePath]["Energy"]
-                battery.rateAbsolute = battery.nowAbsolute / remainingHours
-                battery.fullAbsolute = battery.nowAbsolute / battery.nowFraction
                 battery.isCharging   = battery.nowFraction < 0.95 ? (data[devicePath]["State"] != "Discharging") : false
+
+                battery.nowAbsolute  = data[devicePath]["Energy"]
+                battery.fullAbsolute = battery.nowAbsolute / battery.nowFraction
+                battery.rateAbsolute = battery.isCharging ? (battery.fullAbsolute - battery.nowAbsolute / remainingHours) : battery.nowAbsolute / remainingHours
+
                 updateBattery(extrapolateBattery(truncateBattery(battery)))
             } else if (devicePath == "" && connectedSources.size == 1) {
                 connectedSources.push(data["Battery"]["Sources"])
@@ -193,7 +195,7 @@ Item {
                 errorCount = 0
                 sourcesProcessed += 1
                 if (sourcesProcessed == connectedSources.length) {
-                    interval = Global.batteryUpdateInterval
+                    interval = rootItem.global.batteryUpdateInterval
                     updateBattery(extrapolateBattery(truncateBattery(battery)))
                     sourcesProcessed = 0
                 }
@@ -209,6 +211,6 @@ Item {
                 }
             }
         }
-        interval: Global.batteryUpdateInterval
+        interval: rootItem.global.batteryUpdateInterval
     }
 }

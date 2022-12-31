@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http: //www.gnu.org/licenses/>.
  */
-import QtQuick 2.2
-import QtGraphicalEffects 1.0
+import QtQuick 2.15
 import ".."
 
 Rectangle {
@@ -23,31 +22,26 @@ Rectangle {
 
     anchors.fill: parent
     color: "transparent"
-    visible: Global.boltVisible
-    opacity: Global.batteryIsCharging ? 0.7 : 0.0
+    property bool isCharging: rootItem.global.batteryIsCharging
+    onIsChargingChanged: {
+        if (isCharging) {
+            animation.playing = true
+        }
+    }
 
-    Rectangle {
-        x: Global.batteryIsCharging ? Global.maxLen+width : -width
-        y: 0
-        width: 400
-        height: parent.height
-
-        Behavior on x {
-            NumberAnimation {
-                duration: 1000
-                easing.type: Easing.InQuad
+    AnimatedImage {
+        id: animation
+        anchors {
+            fill: parent
+            topMargin: -parent.height
+            bottomMargin: -parent.height
+        }
+        source: "bolt.webp"
+        speed: 5.0
+        onCurrentFrameChanged: {
+            if ((currentFrame == frameCount-1) || (currentFrame == 0 && !isCharging)) {
+                playing = false
             }
         }
-        LinearGradient {
-            anchors.fill: parent
-            start: Qt.point(0, 0)
-            end: Qt.point(parent.width, parent.height)
-            gradient: Gradient {
-                GradientStop { position: 0.25; color: "#00000000" }
-                GradientStop { position: 0.50; color: "#A0FFFFFF" }
-                GradientStop { position: 0.75; color: "#00000000" }
-            }
-        }
-        color: "transparent"
     }
 }
